@@ -1,0 +1,2619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Advanced Tax Calculator FY2025-26</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#f5f1eb;color:#1a1a1a;padding-bottom:60px}
+.hdr{background:#1a1a1a;color:#f5f1eb;padding:18px 16px 14px;position:sticky;top:0;z-index:99}
+.hdr h1{font-family:'DM Serif Display',serif;font-size:18px;line-height:1.2}
+.grp{margin:20px 14px 0}
+.grp-hdr{display:flex;align-items:baseline;gap:8px;margin-bottom:2px}
+.grp-num{font-family:'DM Serif Display',serif;font-size:22px;color:#b5451b;line-height:1}
+.grp-ttl{font-family:'DM Serif Display',serif;font-size:17px;color:#1a1a1a;line-height:1.2}
+.grp-intro{font-size:12px;color:#7a7060;line-height:1.55;margin:4px 0 10px;padding-left:2px}
+.grp-divider{height:2px;background:linear-gradient(90deg,#b5451b,#ede8df);margin:6px 0 0;border-radius:2px}
+.hdr p{font-size:10px;color:#aaa;margin-top:4px;letter-spacing:.06em;text-transform:uppercase}
+.sec{margin:14px 14px 0;background:#fff;border-radius:12px;overflow:hidden;border:1px solid #ccc5b8}
+.sec-ttl{background:#1a1a1a;color:#f5f1eb;padding:9px 14px;font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase}
+.sec-ttl.toggle{display:flex;justify-content:space-between;align-items:center;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.sec-ttl.toggle .chev{font-size:12px;transition:transform 0.2s}
+.sec-ttl.toggle.open .chev{transform:rotate(90deg)}
+.collapsible{max-height:0;overflow:hidden;transition:max-height 0.25s ease}
+.collapsible.open{max-height:2000px}
+.row{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid #ede8df;gap:10px}
+.row:last-child{border-bottom:none}
+.prop-sub{background:#f2f9f5;border-left:3px solid #3d7a5c;margin:0 14px;border-radius:0 0 8px 8px}
+.prop-sub .row{padding-left:16px}
+.prop-sub .row:last-child{border-radius:0 0 8px 8px}
+
+
+.lbl{font-size:13px;font-weight:500;flex:1;line-height:1.3}
+.sub{font-size:11px;color:#7a7060;font-weight:400}
+.ibox{display:flex;align-items:center;background:#ede8df;border:1.5px solid #ccc5b8;border-radius:8px;padding:6px 10px;min-width:110px;flex-shrink:0}
+.ibox span{flex-shrink:0}
+.ibox input{min-width:0}
+.ibox span{font-size:12px;color:#7a7060;margin-right:4px;font-weight:500;flex-shrink:0}
+.ibox input{background:none;border:none;outline:none;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:600;color:#1d4e5e;width:100%;text-align:right;-webkit-appearance:none}
+.ibox input:focus{color:#b5451b}
+.btn{display:block;width:calc(100% - 28px);margin:14px 14px 0;padding:16px;background:#b5451b;color:#fff;border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:600;cursor:pointer;text-align:center;-webkit-tap-highlight-color:transparent;-webkit-appearance:none;touch-action:manipulation;transition:background 0.2s,opacity 0.2s}
+.btn.dulled{background:#c9c2b4;color:#8a8272;cursor:default}
+.btn.dulled:active{background:#c9c2b4}
+.regime-toggle-btn{font-size:12px;font-weight:600;padding:7px 18px;border-radius:8px;border:1.5px solid #ccc5b8;background:#fff;color:#7a7060;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.regime-toggle-btn.active-new{background:#1d4e5e;border-color:#1d4e5e;color:#fff}
+.regime-toggle-btn.active-old{background:#2c4a6e;border-color:#2c4a6e;color:#fff}
+.toggle-unanswered-hint{font-size:10.5px;color:#b5451b;text-align:center;padding:2px 14px 8px;font-weight:600}
+.btn-helper{text-align:center;font-size:11.5px;color:#7a7060;margin:8px 14px 0;line-height:1.5;transition:color 0.2s}
+.btn-helper.active{color:#1d4e5e;font-weight:500}
+.btn:active{background:#8f3514}
+.rgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px}
+.rcard{border-radius:10px;overflow:hidden;border:1.5px solid #ccc5b8}
+.rcard-hdr{padding:9px 11px;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.rcard.new .rcard-hdr{background:#1d4e5e;color:#fff}
+.rcard.old .rcard-hdr{background:#2c4a6e;color:#fff}
+.ri{padding:9px 11px;border-bottom:1px solid #ede8df;background:#fff}
+.ri:last-child{border-bottom:none}
+.ri-hi{background:#e8f4f8}
+.rcard.old .ri-hi{background:#e2eaf0}
+.ri-lbl{font-size:10px;color:#7a7060;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px}
+.ri-val{font-size:13px;font-weight:600}
+.ri-val.lg{font-size:16px}
+.ri-val.grn{color:#1e6b3c}
+.banner{margin:10px 14px 0;background:linear-gradient(135deg,#dcefe4,#f2faf5);border:1.5px solid #3d7a5c;border-radius:12px;padding:14px;text-align:center}
+.yr-warn{margin:12px 14px 0;background:#fff3f0;border:1.5px solid #c0392b;border-radius:12px;padding:13px 14px;display:flex;gap:10px;align-items:flex-start}
+.yr-warn-icon{font-size:18px;flex-shrink:0;line-height:1.3}
+.yr-warn-text{font-size:12px;color:#8a2f22;line-height:1.55}
+.yr-warn-text b{color:#c0392b}
+.ban-ttl{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#3d7a5c;font-weight:600;margin-bottom:5px}
+.ban-amt{font-family:'DM Serif Display',serif;font-size:26px;color:#1a1a1a}
+.ban-sub{font-size:11px;color:#7a7060;margin-top:3px}
+.blk{margin:12px 14px 0;background:#fff;border:1px solid #ccc5b8;border-radius:12px;overflow:hidden}
+.blk-ttl{background:#1a1a1a;color:#f5f1eb;padding:9px 14px;font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase}
+.blk-row{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;border-bottom:1px solid #ede8df}
+.blk-row:last-child{border-bottom:none}
+.blk-lbl{font-size:13px;font-weight:500}
+.blk-sub{font-size:11px;color:#7a7060;margin-top:2px}
+.blk-val{font-size:14px;font-weight:600;color:#b5451b;text-align:right}
+.blk-val.grn{color:#1e6b3c}
+.blk-val.ink{color:#1a1a1a}
+.atp{margin:12px 14px 0}
+.atp-ttl{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#7a7060;font-weight:600;margin-bottom:7px;padding-left:2px}
+.atp-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.atp-card{background:#fff;border:1px solid #ccc5b8;border-radius:10px;overflow:hidden}
+.atp-hdr{padding:8px 12px;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.atp-card.new .atp-hdr{background:#1d4e5e;color:#fff}
+.atp-card.old .atp-hdr{background:#2c4a6e;color:#fff}
+.atp-row{padding:8px 12px;border-bottom:1px solid #ede8df;background:#fff}
+.atp-row:last-child{border-bottom:none}
+.atp-row-lbl{font-size:10px;color:#7a7060;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px}
+.atp-row-val{font-size:13px;font-weight:600}
+.atp-row-val.red{color:#b5451b}
+.atp-row-val.grn{color:#1e6b3c}
+.atp-row-hi{background:#f5f1eb}
+.dd-card{margin:12px 14px 0;background:#fff;border:1px solid #ccc5b8;border-radius:12px;overflow:hidden}
+.dd-hdr{background:#1a1a1a;color:#f5f1eb;padding:9px 14px;font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase}
+.dd-row{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;border-bottom:1px solid #ede8df}
+.dd-row:last-child{border-bottom:none}
+.dd-left{flex:1}
+.dd-lbl{font-size:13px;font-weight:600}
+.dd-sub{font-size:11px;color:#7a7060;margin-top:1px}
+.dd-pct{font-size:13px;font-weight:700;color:#b5451b;margin-left:10px;white-space:nowrap}
+.dd-row.hi{background:#eaf5f3}
+.dd-row.grn{background:#eaf5f3}
+.slabs{margin:12px 14px 0}
+.slab-ttl{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#7a7060;font-weight:600;margin-bottom:7px;padding-left:2px}
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.scard{background:#fff;border:1px solid #ccc5b8;border-radius:10px;overflow:hidden}
+.scard-hdr{padding:7px 11px;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.scard.new .scard-hdr{background:#d0e8f0;color:#1d4e5e}
+.scard.old .scard-hdr{background:#e2eaf0;color:#2c4a6e}
+.srow{display:flex;justify-content:space-between;padding:5px 11px;border-bottom:1px solid #ede8df;font-size:11px}
+.srow:last-child{border-bottom:none}
+.srow span:first-child{color:#7a7060}
+.srow span:last-child{font-weight:600}
+.notes{margin:12px 14px 0;background:#fff;border:1px solid #ccc5b8;border-radius:12px;overflow:hidden}
+.notes-ttl{background:#1a1a1a;color:#f5f1eb;padding:9px 14px;font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase}
+.note{display:flex;gap:9px;padding:9px 13px;border-bottom:1px solid #ede8df;font-size:11.5px;line-height:1.5}
+.note-body{flex:1;min-width:0}
+.note-ref{display:inline-block;font-size:9.5px;font-weight:700;color:#1d4e5e;background:#e2eaf0;padding:1px 6px;border-radius:4px;margin-right:6px;letter-spacing:0.02em;vertical-align:middle}
+.cite{display:block;color:#7a7060;font-size:10.5px;font-style:italic;margin-top:3px}
+.note:last-child{border-bottom:none}
+.note b{color:#b5451b;flex-shrink:0;width:14px}
+.ftr{margin:18px 14px 0;font-size:11px;color:#7a7060;text-align:center;line-height:1.6}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div style="font-size:16px;margin-bottom:2px">&#127470;&#127475;</div>
+  <h1>India Tax Estimator</h1>
+  <p>FY 2025-26 &nbsp;&middot;&nbsp; AY 2026-27 &nbsp;&middot;&nbsp; New vs Old Regime</p>
+</div>
+
+<div class="yr-warn">
+  <div class="yr-warn-icon">&#9888;&#65039;</div>
+  <div class="yr-warn-text">
+    <b>Valid for FY 2025-26 (AY 2026-27) only.</b> Tax slabs, deductions, and rules follow the Income Tax Act as applicable for this assessment year. If rules change in a future Budget, this calculator will be refreshed and the title updated to reflect the new FY/AY &mdash; always check the year in the title above matches the year you are filing for.
+  </div>
+</div>
+
+<div class="grp">
+  <div class="grp-hdr"><span class="grp-num">1</span><span class="grp-ttl">Income &amp; Earnings</span></div>
+  <div class="grp-intro">Everything you earned this year &mdash; salary, professional receipts, rent, and any capital gains. Enter full-year figures, or use the part-year projector if something changed mid-year.</div>
+  <div class="grp-divider"></div>
+</div>
+
+<!-- A: INCOME -->
+<div class="sec">
+  <div class="sec-ttl">1.1 &mdash; Income Inputs</div>
+
+  <div class="row" style="background:#eaf5f3">
+    <div class="lbl" style="font-size:11.5px;color:#1d4e5e;line-height:1.5">
+      Enter full-year figures directly, or use the projector below each field if your income changed mid-year (new job, new contract, raise). The projector fills the annual figure for you &mdash; it does not add on top.
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="lbl">Annual Salary Income<div class="sub">Gross, before standard deduction</div></div>
+    <div class="ibox"><span>Rs.</span><input type="text" id="salary" value="0" inputmode="numeric"></div>
+  </div>
+  <div class="row" style="padding-top:0;padding-bottom:10px">
+    <div class="lbl" style="font-size:11px;color:#7a7060">
+      Part-year? Monthly rate
+      <input type="text" id="salary_monthly_rate" value="" placeholder="e.g. 2,50,000" inputmode="numeric" style="width:90px;border:none;border-bottom:1px solid #ccc5b8;background:none;font-size:11px;color:#1d4e5e;text-align:right;margin:0 4px">
+      &times; months active
+      <input type="text" id="salary_months" value="" placeholder="12" inputmode="numeric" style="width:36px;border:none;border-bottom:1px solid #ccc5b8;background:none;font-size:11px;color:#1d4e5e;text-align:center;margin:0 4px">
+      <button type="button" id="salary_project_btn" style="font-size:16px;font-weight:700;padding:0 2px;border:none;background:none;color:#1d4e5e;cursor:pointer;flex-shrink:0;line-height:1" title="Fill annual amount from this rate">&#8626;</button>
+    </div>
+  </div>
+
+  <div class="row" id="hra_section_intro" style="background:#eaf5f3">
+    <div class="lbl" style="font-size:11.5px;color:#1d4e5e;line-height:1.6">
+      Do you pay rent for the home you personally live in? (Different from any rented-out property above &mdash; this is about where <b>you</b> reside.)
+    </div>
+  </div>
+  <div class="row" style="justify-content:center;gap:8px;padding:8px 14px">
+    <button type="button" id="hra_pays_rent_yes_btn" class="regime-toggle-btn">Yes</button>
+    <button type="button" id="hra_pays_rent_no_btn" class="regime-toggle-btn">No</button>
+  </div>
+  <div class="toggle-unanswered-hint" id="hra_pays_rent_hint">Please choose one</div>
+
+  <div id="hra_block" style="display:none">
+    <div class="row" style="background:#eaf5f3">
+      <div class="lbl" style="font-size:11.5px;color:#1d4e5e;line-height:1.6">
+        Do you receive HRA (House Rent Allowance) as a specific part of your salary? Check your payslip &mdash; if unsure, most salaried employees do.
+      </div>
+    </div>
+    <div class="row" style="justify-content:center;gap:8px;padding:8px 14px">
+      <button type="button" id="hra_has_hra_yes_btn" class="regime-toggle-btn">Yes, I receive HRA</button>
+      <button type="button" id="hra_has_hra_no_btn" class="regime-toggle-btn">No HRA</button>
+    </div>
+    <div class="toggle-unanswered-hint" id="hra_has_hra_hint">Please choose one</div>
+
+    <!-- HRA PATH -->
+    <div id="hra_yes_fields">
+      <div class="row">
+        <div class="lbl">Annual Rent Paid<div class="sub">What you actually pay your landlord</div></div>
+        <div class="ibox"><span>Rs.</span><input type="text" id="hra_rent_paid" value="0" inputmode="numeric"></div>
+      </div>
+      <div class="row">
+        <div class="lbl">Annual HRA Received<div class="sub">The HRA component shown on your payslip/Form 16</div></div>
+        <div class="ibox"><span>Rs.</span><input type="text" id="hra_received" value="0" inputmode="numeric"></div>
+      </div>
+      <div class="row">
+        <div class="lbl">Annual Basic Salary + DA<div class="sub">NOT gross/CTC &mdash; just Basic + Dearness Allowance, see note below</div></div>
+        <div class="ibox"><span>Rs.</span><input type="text" id="hra_basic_da" value="0" inputmode="numeric"></div>
+      </div>
+      <div class="row" style="background:#eaf5f3">
+        <div class="lbl" style="font-size:11.5px;color:#1d4e5e;line-height:1.6">
+          Is your rented city one of Delhi, Mumbai, Kolkata, or Chennai? These are the only cities counted as "metro" for HRA in FY 2025-26 &mdash; everywhere else (including Bengaluru, Pune, Hyderabad) is "non-metro" this year.
+        </div>
+      </div>
+      <div class="row" style="justify-content:center;gap:8px;padding:8px 14px">
+        <button type="button" id="hra_metro_btn" class="regime-toggle-btn">Metro (Delhi/Mumbai/Kolkata/Chennai)</button>
+        <button type="button" id="hra_nonmetro_btn" class="regime-toggle-btn">Non-Metro (everywhere else)</button>
+      </div>
+      <div class="toggle-unanswered-hint" id="hra_metro_hint">Please choose one</div>
+    </div>
+
+    <!-- 80GG PATH -->
+    <div id="hra_no_fields" style="display:none">
+      <div class="row">
+        <div class="lbl">Annual Rent Paid<div class="sub">What you actually pay your landlord</div></div>
+        <div class="ibox"><span>Rs.</span><input type="text" id="hra_80gg_rent_paid" value="0" inputmode="numeric"></div>
+      </div>
+      <div class="row" style="background:#eaf5f3">
+        <div class="lbl" style="font-size:11.5px;color:#1d4e5e;line-height:1.6">
+          Section 80GG only applies if <b>neither you, your spouse, nor your minor child owns a residential property in the city you live/work in</b> (a self-occupied property elsewhere is fine). Please confirm this applies to you.
+        </div>
+      </div>
+      <div class="row" style="justify-content:center;gap:8px;padding:8px 14px">
+        <button type="button" id="hra_80gg_confirm_yes_btn" class="regime-toggle-btn">Confirmed \u2014 no property there</button>
+        <button type="button" id="hra_80gg_confirm_no_btn" class="regime-toggle-btn">I own a home there</button>
+      </div>
+      <div class="toggle-unanswered-hint" id="hra_80gg_confirm_hint">Please choose one</div>
+    </div>
+
+    <div class="row" id="hra_result_row" style="display:none;background:#f5f1eb;flex-direction:column;align-items:stretch;gap:6px">
+      <div style="font-size:11px;font-weight:700;color:#1d4e5e;text-transform:uppercase;letter-spacing:0.05em">Rent Deduction Result &mdash; Old Regime Only</div>
+      <div id="hra_result_lines" style="font-size:12px;color:#1a1a1a;line-height:1.9"></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="lbl">Annual Consultancy Receipts<div class="sub">Ex-GST &middot; 44ADA gross</div></div>
+    <div class="ibox"><span>Rs.</span><input type="text" id="consultancy" value="0" inputmode="numeric"></div>
+  </div>
+  <div class="row" style="padding-top:0;padding-bottom:10px">
+    <div class="lbl" style="font-size:11px;color:#7a7060">
+      Part-year? Monthly rate
+      <input type="text" id="consultancy_monthly_rate" value="" placeholder="e.g. 5,00,000" inputmode="numeric" style="width:90px;border:none;border-bottom:1px solid #ccc5b8;background:none;font-size:11px;color:#1d4e5e;text-align:right;margin:0 4px">
+      &times; months active
+      <input type="text" id="consultancy_months" value="" placeholder="12" inputmode="numeric" style="width:36px;border:none;border-bottom:1px solid #ccc5b8;background:none;font-size:11px;color:#1d4e5e;text-align:center;margin:0 4px">
+      <button type="button" id="consultancy_project_btn" style="font-size:16px;font-weight:700;padding:0 2px;border:none;background:none;color:#1d4e5e;cursor:pointer;flex-shrink:0;line-height:1" title="Fill annual amount from this rate">&#8626;</button>
+    </div>
+  </div>
+
+  <div class="row" id="prop_section_intro" style="background:#eaf5f3">
+    <div class="lbl" style="font-size:11.5px;color:#1d4e5e;line-height:1.6">
+      Property income and any home loan interest now live together below &mdash; how many properties do you have a home loan on, or earn rent from?
+    </div>
+  </div>
+  <div class="row" style="justify-content:center;gap:8px;flex-wrap:wrap;padding:10px 14px">
+    <button type="button" id="prop_count_none_btn" class="regime-toggle-btn active-new">None</button>
+    <button type="button" id="prop_count_one_btn" class="regime-toggle-btn">One</button>
+    <button type="button" id="prop_count_multi_btn" class="regime-toggle-btn">Two or more</button>
+  </div>
+
+  <!-- SINGLE PROPERTY MODE -->
+  <div id="prop_single_block" style="display:none">
+    <div class="row" style="background:#eaf5f3">
+      <div class="lbl" style="font-size:11.5px;color:#1d4e5e;line-height:1.6">
+        Is this the home you live in (self-occupied), or is it rented out to someone else (let-out)? This changes which rules apply.
+      </div>
+    </div>
+    <div class="row" style="justify-content:center;gap:8px;padding:8px 14px">
+      <button type="button" id="prop_single_occ_btn" class="regime-toggle-btn">Self-Occupied</button>
+      <button type="button" id="prop_single_let_btn" class="regime-toggle-btn">Let-Out (Rented)</button>
+    </div>
+    <div class="toggle-unanswered-hint" id="prop_single_occ_hint">Please choose one</div>
+
+    <div class="row" id="prop_single_rent_row" style="display:none">
+      <div class="lbl">Annual Rental Income<div class="sub">Gross, before 30% deduction</div></div>
+      <div class="ibox"><span>Rs.</span><input type="text" id="prop1_rent" value="0" inputmode="numeric"></div>
+    </div>
+    <div class="row" id="prop1_rent_projector_row" style="display:none;padding-top:0;padding-bottom:10px">
+      <div class="lbl" style="font-size:11px;color:#7a7060">
+        Part-year? Monthly rate
+        <input type="text" id="prop1_rent_monthly_rate" value="" placeholder="e.g. 40,000" inputmode="numeric" style="width:90px;border:none;border-bottom:1px solid #ccc5b8;background:none;font-size:11px;color:#1d4e5e;text-align:right;margin:0 4px">
+        &times; months active
+        <input type="text" id="prop1_rent_months" value="" placeholder="12" inputmode="numeric" style="width:36px;border:none;border-bottom:1px solid #ccc5b8;background:none;font-size:11px;color:#1d4e5e;text-align:center;margin:0 4px">
+        <button type="button" id="prop1_rent_project_btn" style="font-size:16px;font-weight:700;padding:0 2px;border:none;background:none;color:#1d4e5e;cursor:pointer;flex-shrink:0;line-height:1" title="Fill annual amount from this rate">&#8626;</button>
+      </div>
+    </div>
+
+    <div class="row" style="background:#eaf5f3">
+      <div class="lbl" style="font-size:11.5px;color:#1d4e5e;line-height:1.6">
+        Do you have an <b>active</b> home loan against this property right now? (Not one you've already fully paid off or closed &mdash; only a loan you're still repaying.)
+      </div>
+    </div>
+    <div class="row" style="justify-content:center;gap:8px;padding:8px 14px">
+      <button type="button" id="prop1_has_loan_yes_btn" class="regime-toggle-btn">Yes</button>
+      <button type="button" id="prop1_has_loan_no_btn" class="regime-toggle-btn">No</button>
+    </div>
+    <div class="toggle-unanswered-hint" id="prop1_has_loan_hint">Please choose one</div>
+
+    <div id="prop1_loan_fields" style="display:none">
+      <div class="row">
+        <div class="lbl">Annual Home Loan Interest Paid<div class="sub" id="prop1_interest_sub">Max Rs.2,00,000 deductible &mdash; Old Regime only</div></div>
+        <div class="ibox"><span>Rs.</span><input type="text" id="prop1_interest" value="0" inputmode="numeric"></div>
+      </div>
+      <div class="row" id="prop1_precon_row" style="padding-top:0">
+        <div class="lbl" style="font-size:11px;color:#7a7060">Still under construction, or was recently completed? See note below.</div>
+      </div>
+      <div class="row" style="padding-top:0">
+        <button type="button" id="prop1_precon_toggle_btn" style="font-size:11px;padding:4px 10px;border-radius:6px;border:1px solid #ccc5b8;background:#fff;color:#7a7060;cursor:pointer">+ Add pre-construction interest</button>
+      </div>
+      <div class="row" id="prop1_precon_fields" style="display:none">
+        <div class="lbl">Accumulated Pre-Construction Interest<div class="sub">Total interest paid before construction finished</div></div>
+        <div class="ibox"><span>Rs.</span><input type="text" id="prop1_precon_amt" value="0" inputmode="numeric"></div>
+      </div>
+      <div class="row" id="prop1_precon_year_row" style="display:none;padding-top:0">
+        <div class="lbl">Year Construction Completed<div class="sub">e.g. 2024 &mdash; claimed in 5 equal yearly instalments from that year</div></div>
+        <div class="ibox"><input type="text" id="prop1_precon_year" value="" inputmode="numeric" placeholder="e.g. 2024"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MULTI PROPERTY MODE -->
+  <div id="prop_multi_block" style="display:none">
+    <div class="row" style="background:#eaf5f3">
+      <div class="lbl" style="font-size:11.5px;color:#1d4e5e;line-height:1.6">
+        Add each property below and mark whether you live in it (self-occupied). Up to 2 properties can be self-occupied; any beyond that are automatically treated as "deemed let-out" &mdash; taxed on notional rent even if empty, per the Income Tax Act. See guidance notes for details.
+      </div>
+    </div>
+    <div id="properties_list"></div>
+    <div class="row" style="justify-content:center;padding:10px 14px">
+      <button type="button" id="add_property_btn" style="font-size:12px;padding:6px 14px;border-radius:8px;border:1.5px solid #1d4e5e;background:#fff;color:#1d4e5e;cursor:pointer;font-weight:600">+ Add another property</button>
+    </div>
+  </div>
+
+  <!-- COMBINED SUMMARY (both modes) -->
+  <div class="row" id="prop_summary_row" style="display:none;background:#f5f1eb;flex-direction:column;align-items:stretch;gap:6px">
+    <div style="font-size:11px;font-weight:700;color:#1d4e5e;text-transform:uppercase;letter-spacing:0.05em">Combined Property Position</div>
+    <div id="prop_summary_lines" style="font-size:12px;color:#1a1a1a;line-height:1.9"></div>
+  </div>
+  <div class="row" id="prop_caveat_row" style="display:none;background:#fff3f0">
+    <div class="lbl" style="font-size:11px;color:#8a2f22;line-height:1.6">&#9888; <b>Flag for CA review:</b> <span id="prop_caveat_text"></span></div>
+  </div>
+
+  <div class="row">
+    <div class="lbl">Other Income<div class="sub">Interest, dividends, misc</div></div>
+    <div class="ibox"><span>Rs.</span><input type="text" id="other" value="0" inputmode="numeric"></div>
+  </div>
+</div>
+
+<!-- CAPITAL GAINS SECTION -->
+<div class="sec">
+  <div class="sec-ttl">1.2 &mdash; Capital Gains &mdash; by Tax Rate Bucket</div>
+
+  <div class="row" style="background:#eaf5f3">
+    <div class="lbl" style="font-size:11.5px;color:#1d4e5e;line-height:1.5">
+      Only include gains you've actually locked in this year by selling, redeeming, or otherwise transferring the asset &mdash; paper gains on things you still hold don't count here. Grouped by the rate that applies, not by asset name; pick the bucket that matches your asset, see note below each.
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="lbl">
+      Equity / MF STCG (&lt;12 months)
+      <div class="sub">Listed shares, equity MF &middot; flat 20%</div>
+    </div>
+    <div class="ibox"><span>Rs.</span><input type="text" id="stcg_equity" value="0" inputmode="numeric"></div>
+  </div>
+
+  <div class="row">
+    <div class="lbl">
+      Equity / MF LTCG (&gt;12 months)
+      <div class="sub">Listed shares, equity MF &middot; 12.5% above Rs.1.25L exempt</div>
+    </div>
+    <div class="ibox"><span>Rs.</span><input type="text" id="ltcg_equity" value="0" inputmode="numeric"></div>
+  </div>
+
+  <div class="row">
+    <div class="lbl">
+      Slab-Rate Gains
+      <div class="sub">Debt MF (any holding) &middot; Gold/Unlisted STCG &middot; Property* STCG (&lt;24 months) &middot; taxed as per your slab</div>
+    </div>
+    <div class="ibox"><span>Rs.</span><input type="text" id="cg_slab" value="0" inputmode="numeric"></div>
+  </div>
+
+  <div class="prop-sub">
+    <div class="row" style="background:#eaf5f3">
+      <div class="lbl" style="font-size:11.5px;color:#1d4e5e;line-height:1.5">
+        <b style="font-style:normal">*Property</b> held &gt;24 months (long-term) has a special rule based on purchase date &mdash; enter details below rather than using the Slab-Rate row above. If held &le;24 months (short-term), include the gain in Slab-Rate Gains above instead.
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="lbl">Property Purchase Date<div class="sub">Determines if indexation choice applies</div></div>
+      <div class="ibox" style="min-width:150px"><input type="text" id="prop_purchase_date" value="" placeholder="dd/mm/yyyy" inputmode="numeric" style="background:none;border:none;outline:none;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:600;color:#1d4e5e;width:100%"></div>
+    </div>
+
+    <div class="row">
+      <div class="lbl">Property Sale Price<div class="sub">Gross sale value this FY</div></div>
+      <div class="ibox"><span>Rs.</span><input type="text" id="prop_sale" value="0" inputmode="numeric"></div>
+    </div>
+
+    <div class="row">
+      <div class="lbl">Property Purchase Price<div class="sub">Original cost incl. stamp duty</div></div>
+      <div class="ibox"><span>Rs.</span><input type="text" id="prop_cost" value="0" inputmode="numeric"></div>
+    </div>
+
+    <div class="row" id="prop_year_row" style="display:none">
+      <div class="lbl">Year of Purchase (for CII)<div class="sub">e.g. 2012 for FY 2012-13 &mdash; used to fetch indexation factor</div></div>
+      <div class="ibox"><input type="text" id="prop_purchase_year" value="" inputmode="numeric" placeholder="e.g. 2012"></div>
+    </div>
+
+    <div class="row" id="prop_indexation_note" style="display:none;background:#eaf5f3">
+      <div class="lbl" style="font-size:11.5px;color:#1e6b3c;line-height:1.5" id="prop_indexation_text">
+        Purchased before 23 July 2024 &mdash; both options (12.5% flat vs 20% with indexation) will be compared, and the lower one used automatically.
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="lbl">
+      Gold / Unlisted Shares LTCG (&gt;24 months)
+      <div class="sub">Flat 12.5%, no indexation, no exemption threshold</div>
+    </div>
+    <div class="ibox"><span>Rs.</span><input type="text" id="ltcg_other" value="0" inputmode="numeric"></div>
+  </div>
+</div>
+
+<div class="grp">
+  <div class="grp-hdr"><span class="grp-num">2</span><span class="grp-ttl">Deductions, Reliefs &amp; Tax Already Paid</span></div>
+  <div class="grp-intro">Things that reduce what you owe (mostly Old Regime, one or two apply to both &mdash; each field says which), and tax that's already been withheld or paid on your behalf &mdash; TDS from your client or employer, and any advance tax you've paid yourself.</div>
+  <div class="grp-divider"></div>
+</div>
+
+<!-- B: DEDUCTIONS -->
+<div class="sec">
+  <div class="sec-ttl">2.1 &mdash; Deductions</div>
+  <div class="row" style="background:#eaf5f3">
+    <div class="lbl" style="font-size:11.5px;color:#1d4e5e;line-height:1.6">
+      Most of these only apply if you choose Old Regime &mdash; each one below says which. One (80CCD(2), employer's NPS) works under both.
+    </div>
+  </div>
+  <div class="row">
+    <div class="lbl">80C &mdash; ELSS / PPF / LIC / Life Insurance<div class="sub"><span style="color:#8a2f22;font-weight:600">Old Regime only</span> &middot; Max Rs.1,50,000 total &mdash; see Important Notes for what counts</div></div>
+    <div class="ibox"><span>Rs.</span><input type="text" id="ded80c" value="0" inputmode="numeric"></div>
+  </div>
+  <div class="row" id="ded80c_warn_row" style="display:none;padding-top:0">
+    <div class="lbl" style="font-size:11px;color:#c0392b">&#9888; Entered amount exceeds the Rs.1,50,000 limit &mdash; only the max will count towards your deduction.</div>
+  </div>
+
+  <div class="row">
+    <div class="lbl">80D &mdash; Health Insurance: Self, Spouse &amp; Children<div class="sub"><span style="color:#8a2f22;font-weight:600">Old Regime only</span> &middot; Max Rs.25,000/Rs.50,000 &mdash; see Important Notes for details</div></div>
+    <div class="ibox"><span>Rs.</span><input type="text" id="ded80d_self" value="0" inputmode="numeric"></div>
+  </div>
+  <div class="row" id="ded80d_self_warn_row" style="display:none;padding-top:0">
+    <div class="lbl" style="font-size:11px;color:#c0392b">&#9888; Entered amount exceeds the applicable limit &mdash; only the max will count towards your deduction.</div>
+  </div>
+
+  <div class="row">
+    <div class="lbl">80D &mdash; Health Insurance: Parents<div class="sub"><span style="color:#8a2f22;font-weight:600">Old Regime only</span> &middot; Max Rs.25,000/Rs.50,000 &mdash; see Important Notes for details</div></div>
+    <div class="ibox"><span>Rs.</span><input type="text" id="ded80d_mother" value="0" inputmode="numeric"></div>
+  </div>
+  <div class="row" id="ded80d_mother_warn_row" style="display:none;padding-top:0">
+    <div class="lbl" style="font-size:11px;color:#c0392b">&#9888; Entered amount exceeds the applicable limit &mdash; only the max will count towards your deduction.</div>
+  </div>
+
+  <div class="row">
+    <div class="lbl">80CCD(1B) &mdash; Your Own NPS Contribution<div class="sub"><span style="color:#8a2f22;font-weight:600">Old Regime only</span> &middot; Max Rs.50,000, on top of the 80C limit above &mdash; see Important Notes</div></div>
+    <div class="ibox"><span>Rs.</span><input type="text" id="ded80ccd1b" value="0" inputmode="numeric"></div>
+  </div>
+  <div class="row" id="ded80ccd1b_warn_row" style="display:none;padding-top:0">
+    <div class="lbl" style="font-size:11px;color:#c0392b">&#9888; Entered amount exceeds the Rs.50,000 limit &mdash; only the max will count towards your deduction.</div>
+  </div>
+
+  <div class="row">
+    <div class="lbl">80CCD(2) &mdash; Employer's NPS Contribution<div class="sub"><span style="color:#1e6b3c;font-weight:600">Applicable to both regimes</span> &middot; Capped at 14% of Basic+DA &mdash; see Important Notes</div></div>
+    <div class="ibox"><span>Rs.</span><input type="text" id="ded80ccd2" value="0" inputmode="numeric"></div>
+  </div>
+  <div class="row" id="ded80ccd2_warn_row" style="display:none;padding-top:0">
+    <div class="lbl" style="font-size:11px;color:#c0392b">&#9888; Entered amount exceeds 14% of Basic+DA &mdash; only the max will count towards your deduction.</div>
+  </div>
+
+  <div class="row">
+    <div class="lbl">80TTA &mdash; Savings Account Interest<div class="sub"><span style="color:#8a2f22;font-weight:600">Old Regime only</span> &middot; Max Rs.10,000 &mdash; savings account only, not FDs/RDs</div></div>
+    <div class="ibox"><span>Rs.</span><input type="text" id="ded80tta" value="0" inputmode="numeric"></div>
+  </div>
+  <div class="row" id="ded80tta_warn_row" style="display:none;padding-top:0">
+    <div class="lbl" style="font-size:11px;color:#c0392b">&#9888; Entered amount exceeds the Rs.10,000 limit &mdash; only the max will count towards your deduction.</div>
+  </div>
+</div>
+
+<!-- UNIFIED TDS SECTION: multiple salary sources + multiple consultancy clients -->
+<div class="sec" id="tds_unified_sec">
+  <div class="sec-ttl">2.2 &mdash; TDS &mdash; Salary &amp; Consultancy Sources</div>
+
+  <div class="row" style="background:#eaf5f3">
+    <div class="lbl" style="font-size:11.5px;color:#1d4e5e;line-height:1.6">
+      If you have more than one employer or client, add each one separately below so their TDS is tracked individually. Not sure of your salary TDS? Check the <b>"Tax Deducted"</b> row on your payslip, or <b>Form 16 Part A</b> (annual summary from your employer) &mdash; or look up <b>Form 26AS / AIS</b> on the income tax portal, which shows everything actually deducted and deposited against your PAN, from every source.
+    </div>
+  </div>
+
+  <div class="row" id="tds_empty_hint" style="display:none">
+    <div class="lbl" style="font-size:12px;color:#7a7060;font-style:normal">Enter a salary or consultancy figure in Income &amp; Earnings above, and rows will appear here to log TDS for each employer or client.</div>
+  </div>
+
+  <div id="salary_sources_list"></div>
+  <div class="row" id="salary_add_row" style="display:none;justify-content:center;padding:10px 14px">
+    <button type="button" id="add_salary_source_btn" style="font-size:12px;padding:6px 14px;border-radius:8px;border:1.5px solid #1d4e5e;background:#fff;color:#1d4e5e;cursor:pointer;font-weight:600">+ Add another employer</button>
+  </div>
+
+  <div id="consultancy_sources_list"></div>
+  <div class="row" id="consultancy_add_row" style="display:none;justify-content:center;padding:10px 14px">
+    <button type="button" id="add_consultancy_source_btn" style="font-size:12px;padding:6px 14px;border-radius:8px;border:1.5px solid #1d4e5e;background:#fff;color:#1d4e5e;cursor:pointer;font-weight:600">+ Add another client</button>
+  </div>
+</div>
+
+<!-- C2: ADVANCE TAX PAID TRACKER (collapsible, closed by default) -->
+<div class="sec">
+  <div class="sec-ttl toggle" id="c2_toggle">
+    <span>2.3 &mdash; Advance Tax Actually Paid &mdash; Conditional</span>
+    <span class="chev">&#9656;</span>
+  </div>
+  <div class="row" style="background:#eaf5f3">
+    <div class="lbl" style="font-size:11.5px;color:#1d4e5e;line-height:1.5">
+      If you have already paid any advance tax this year, please enter it here &mdash; date and amount for each payment. This isn't needed if you haven't made any payments yet; it only applies once you actually have something to log, and it feeds directly into the interest estimate further down. Tap below to expand and enter your payments.
+    </div>
+  </div>
+
+  <div class="row" id="c2_action_hint">
+    <div class="lbl" style="font-size:12px;color:#7a7060;font-style:normal">Please fill in your advance tax amounts against the dates you actually paid them. If you're paying quarterly, come back to this section each time you make a payment so the figures stay current for the interest calculation below.</div>
+  </div>
+
+  <div class="collapsible" id="c2_body">
+
+  <div class="row">
+    <div class="lbl">Paid by 15 June 2025<div class="sub">Amount, if any</div></div>
+    <div class="ibox"><span>Rs.</span><input type="text" id="paid_jun" value="0" inputmode="numeric"></div>
+  </div>
+
+  <div class="row">
+    <div class="lbl">Paid by 15 September 2025<div class="sub">Amount, if any</div></div>
+    <div class="ibox"><span>Rs.</span><input type="text" id="paid_sep" value="0" inputmode="numeric"></div>
+  </div>
+
+  <div class="row">
+    <div class="lbl">Paid by 15 December 2025<div class="sub">Amount, if any</div></div>
+    <div class="ibox"><span>Rs.</span><input type="text" id="paid_dec" value="0" inputmode="numeric"></div>
+  </div>
+
+  <div class="row" style="background:#eaf5f3">
+    <div class="lbl">Paid by 15 March 2026<div class="sub">Main payment &mdash; especially for 44ADA single instalment</div></div>
+    <div class="ibox"><span>Rs.</span><input type="text" id="paid_mar" value="0" inputmode="numeric"></div>
+  </div>
+
+  <div class="row">
+    <div class="lbl">Paid 16-31 March 2026<div class="sub">Late top-up before FY close, if any</div></div>
+    <div class="ibox"><span>Rs.</span><input type="text" id="paid_late_mar" value="0" inputmode="numeric"></div>
+  </div>
+
+  <div class="row" style="background:#fff3f0">
+    <div class="lbl" style="font-size:11.5px;color:#8a2f22;line-height:1.5">
+      Paid even later &mdash; after 31 March 2026? Add the actual payment date below so the interest calculation stops on that date instead of running to today.
+    </div>
+  </div>
+  <div class="row">
+    <div class="lbl">Late Payment Date<div class="sub">Any date after 31 March 2026</div></div>
+    <div class="ibox" style="min-width:150px"><input type="text" id="paid_after_fy_date" value="" placeholder="dd/mm/yyyy" inputmode="numeric" style="background:none;border:none;outline:none;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:600;color:#1d4e5e;width:100%"></div>
+  </div>
+  <div class="row">
+    <div class="lbl">Late Payment Amount<div class="sub">Paid on the date above</div></div>
+    <div class="ibox"><span>Rs.</span><input type="text" id="paid_after_fy_amt" value="0" inputmode="numeric"></div>
+  </div>
+
+  <div class="row" style="background:#f5f1eb">
+    <div class="lbl">Total Advance Tax Paid<div class="sub">Sum of all payments above</div></div>
+    <div class="ibox" style="background:none;border:none"><span style="font-weight:700;color:#1a1a1a" id="total_paid_disp">Rs.0</span></div>
+  </div>
+  </div>
+</div>
+
+<button class="btn" id="calcbtn">Compute Tax &#8594;</button>
+<div class="btn-helper" id="calcbtn_helper">Enter your details above, then tap Compute</div>
+
+<div class="grp">
+  <div class="grp-hdr"><span class="grp-num">3</span><span class="grp-ttl">Computation</span></div>
+  <div class="grp-intro">Everything below is worked out for you from what you entered above &mdash; your tax under both regimes, what's left to pay, any interest exposure, and which ITR form you'll likely need.</div>
+  <div class="grp-divider"></div>
+</div>
+
+<!-- C: TAX RESULTS -->
+<div class="sec" style="margin-top:14px">
+  <div class="sec-ttl">3.1 &mdash; Tax Results &mdash; New vs Old Regime</div>
+  <div class="rgrid">
+    <div class="rcard new">
+      <div class="rcard-hdr">New Regime</div>
+      <div class="ri"><div class="ri-lbl">Slab Taxable Income</div><div class="ri-val" id="new_taxable">&mdash;</div></div>
+      <div class="ri"><div class="ri-lbl">Slab Income Tax</div><div class="ri-val" id="new_tax_before">&mdash;</div></div>
+      <div class="ri"><div class="ri-lbl">STCG Tax @ 20%</div><div class="ri-val" id="new_stcg_tax">&mdash;</div></div>
+      <div class="ri"><div class="ri-lbl">LTCG Tax @ 12.5%</div><div class="ri-val" id="new_ltcg_tax">&mdash;</div></div>
+      <div class="ri"><div class="ri-lbl">Surcharge</div><div class="ri-val" id="new_surcharge">&mdash;</div></div>
+      <div class="ri"><div class="ri-lbl">Cess @ 4%</div><div class="ri-val" id="new_cess">&mdash;</div></div>
+      <div class="ri ri-hi"><div class="ri-lbl">Total Annual Tax</div><div class="ri-val lg" id="new_total_tax">&mdash;</div></div>
+      <div class="ri"><div class="ri-lbl">Effective Rate</div><div class="ri-val" id="new_eff_rate">&mdash;</div></div>
+      <div class="ri"><div class="ri-lbl">Monthly Take-Home</div><div class="ri-val grn" id="new_monthly">&mdash;</div></div>
+    </div>
+    <div class="rcard old">
+      <div class="rcard-hdr">Old Regime</div>
+      <div class="ri"><div class="ri-lbl">Slab Taxable Income</div><div class="ri-val" id="old_taxable">&mdash;</div></div>
+      <div class="ri"><div class="ri-lbl">Slab Income Tax</div><div class="ri-val" id="old_tax_before">&mdash;</div></div>
+      <div class="ri"><div class="ri-lbl">STCG Tax @ 20%</div><div class="ri-val" id="old_stcg_tax">&mdash;</div></div>
+      <div class="ri"><div class="ri-lbl">LTCG Tax @ 12.5%</div><div class="ri-val" id="old_ltcg_tax">&mdash;</div></div>
+      <div class="ri"><div class="ri-lbl">Surcharge</div><div class="ri-val" id="old_surcharge">&mdash;</div></div>
+      <div class="ri"><div class="ri-lbl">Cess @ 4%</div><div class="ri-val" id="old_cess">&mdash;</div></div>
+      <div class="ri ri-hi"><div class="ri-lbl">Total Annual Tax</div><div class="ri-val lg" id="old_total_tax">&mdash;</div></div>
+      <div class="ri"><div class="ri-lbl">Effective Rate</div><div class="ri-val" id="old_eff_rate">&mdash;</div></div>
+      <div class="ri"><div class="ri-lbl">Monthly Take-Home</div><div class="ri-val grn" id="old_monthly">&mdash;</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SAVINGS BANNER -->
+<div class="banner">
+  <div class="ban-ttl">Annual Saving &mdash; New over Old Regime</div>
+  <div class="ban-amt" id="savings_amount">&mdash;</div>
+  <div class="ban-sub" id="savings_sub">Tap Calculate above to see comparison</div>
+</div>
+
+<!-- E: ADVANCE TAX PLANNER -->
+<div class="atp">
+  <div class="atp-ttl">3.2 &mdash; Advance Tax Planner &mdash; Monthly Set-Aside</div>
+  <div class="atp-grid">
+    <div class="atp-card new">
+      <div class="atp-hdr">New Regime</div>
+      <div class="atp-row"><div class="atp-row-lbl">Total Tax Due</div><div class="atp-row-val red" id="atp_new_total">&mdash;</div></div>
+      <div class="atp-row"><div class="atp-row-lbl">Less: TDS Already Deducted</div><div class="atp-row-val" id="atp_new_tds">&mdash;</div></div>
+      <div class="atp-row atp-row-hi"><div class="atp-row-lbl">Advance Tax to Pay</div><div class="atp-row-val red" id="atp_new_adv">&mdash;</div></div>
+      <div class="atp-row"><div class="atp-row-lbl">Set Aside Monthly</div><div class="atp-row-val red" id="atp_new_mth">&mdash;</div></div>
+      <div class="atp-row atp-row-hi"><div class="atp-row-lbl">Net Monthly Disposable</div><div class="atp-row-val grn" id="atp_new_net">&mdash;</div></div>
+      <div class="atp-row"><div class="atp-row-lbl">Refund if TDS &gt; Tax</div><div class="atp-row-val grn" id="atp_new_refund">&mdash;</div></div>
+    </div>
+    <div class="atp-card old">
+      <div class="atp-hdr">Old Regime</div>
+      <div class="atp-row"><div class="atp-row-lbl">Total Tax Due</div><div class="atp-row-val red" id="atp_old_total">&mdash;</div></div>
+      <div class="atp-row"><div class="atp-row-lbl">Less: TDS Already Deducted</div><div class="atp-row-val" id="atp_old_tds">&mdash;</div></div>
+      <div class="atp-row atp-row-hi"><div class="atp-row-lbl">Advance Tax to Pay</div><div class="atp-row-val red" id="atp_old_adv">&mdash;</div></div>
+      <div class="atp-row"><div class="atp-row-lbl">Set Aside Monthly</div><div class="atp-row-val red" id="atp_old_mth">&mdash;</div></div>
+      <div class="atp-row atp-row-hi"><div class="atp-row-lbl">Net Monthly Disposable</div><div class="atp-row-val grn" id="atp_old_net">&mdash;</div></div>
+      <div class="atp-row"><div class="atp-row-lbl">Refund if TDS &gt; Tax</div><div class="atp-row-val grn" id="atp_old_refund">&mdash;</div></div>
+    </div>
+  </div>
+  <div class="blk-row" style="display:block;padding:10px 14px;border-top:1px solid #ede8df" id="tds_breakdown_row">
+    <div style="font-size:11px;color:#7a7060;line-height:1.7" id="tds_breakdown_text">TDS breakdown: &mdash;</div>
+  </div>
+</div>
+
+<!-- F: DUE DATES -->
+<div class="dd-card">
+  <div class="dd-hdr">3.3 &mdash; Advance Tax Due Dates &mdash; FY 2025-26</div>
+
+  <div class="dd-row" style="display:block;padding:10px 14px;background:#eaf5f3">
+    <div style="font-size:11.5px;color:#1d4e5e;line-height:1.6">
+      Pick a regime to see your actual balance still payable, not just the percentage.
+    </div>
+  </div>
+  <div class="dd-row" style="justify-content:center;gap:8px;padding:8px 14px">
+    <button type="button" id="dd_regime_new_btn" class="regime-toggle-btn active-new">New Regime</button>
+    <button type="button" id="dd_regime_old_btn" class="regime-toggle-btn">Old Regime</button>
+  </div>
+  <div class="dd-row hi" style="display:block;padding:12px 14px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline">
+      <div class="dd-lbl">Balance Advance Tax Payable</div>
+      <div class="dd-pct" style="font-size:15px" id="dd_balance_payable_disp">-</div>
+    </div>
+    <div class="dd-sub" id="dd_balance_payable_sub" style="margin-top:2px">After TDS credited and payments logged in 2.3 above</div>
+  </div>
+
+  <div class="dd-row">
+    <div class="dd-left"><div class="dd-lbl">15 June 2025</div><div class="dd-sub">1st instalment &mdash; Regular taxpayers only</div></div>
+    <div class="dd-pct">15%</div>
+  </div>
+  <div class="dd-row">
+    <div class="dd-left"><div class="dd-lbl">15 September 2025</div><div class="dd-sub">2nd instalment &mdash; Regular taxpayers only</div></div>
+    <div class="dd-pct">45%</div>
+  </div>
+  <div class="dd-row">
+    <div class="dd-left"><div class="dd-lbl">15 December 2025</div><div class="dd-sub">3rd instalment &mdash; Regular taxpayers only</div></div>
+    <div class="dd-pct">75%</div>
+  </div>
+  <div class="dd-row hi">
+    <div class="dd-left"><div class="dd-lbl">15 March 2026 &#9654;</div><div class="dd-sub">44ADA professionals &mdash; 100% in one payment, i.e. the balance shown above</div></div>
+    <div class="dd-pct">100%</div>
+  </div>
+  <div class="dd-row grn">
+    <div class="dd-left"><div class="dd-lbl">31 July 2026</div><div class="dd-sub">ITR filing deadline &mdash; claim TDS refund if applicable</div></div>
+    <div class="dd-pct" style="color:#1e6b3c">ITR</div>
+  </div>
+  <div class="dd-row" style="display:block;padding:10px 14px">
+    <div class="dd-sub" style="font-size:11.5px;line-height:1.6">If you have salary/rental/capital gains alongside 44ADA income, the quarterly dates above technically apply to that portion, and 44ADA's 100% is due by 15 March &mdash; but the balance figure above is your simplest overall guide. Capital gains note: if STCG/LTCG crystallise before 15 March, include in the 15 March payment. If gains arise after 15 March, pay by 31 March to avoid interest u/s 234C.</div>
+  </div>
+</div>
+
+<!-- I: 234B/234C INTEREST CALCULATOR -->
+<div class="blk" style="margin-top:14px">
+  <div class="blk-ttl">3.4 &mdash; Tax Position &amp; Interest Exposure</div>
+  <div class="blk-row" style="display:block;padding:10px 14px;background:#eaf5f3">
+    <div style="font-size:11.5px;color:#1d4e5e;line-height:1.6">
+      Shows where you stand against your total tax liability &mdash; TDS credited, advance tax paid, and whether that's enough to avoid interest. Pick a regime below to see its figures &mdash; the two can differ meaningfully, and if you have 44ADA/business income, switching later isn't free-form (see note on Form 10-IEA). Using what you logged as paid in &ldquo;Advance Tax Actually Paid&rdquo; above. 44ADA professionals pay in a single instalment by 15 March, so only the 15 March deadline and the 90% year-end threshold apply &mdash; the quarterly dates are shown for context only.
+    </div>
+  </div>
+  <div class="blk-row" style="justify-content:center;gap:8px;padding:10px 14px">
+    <button type="button" id="tp_regime_new_btn" class="regime-toggle-btn active-new">New Regime</button>
+    <button type="button" id="tp_regime_old_btn" class="regime-toggle-btn">Old Regime</button>
+  </div>
+  <div class="blk-row">
+    <div><div class="blk-lbl">Assessed Tax</div><div class="blk-sub" id="tp_regime_label_1">Total tax liability &mdash; New Regime</div></div>
+    <div class="blk-val ink" id="int_assessed_tax">-</div>
+  </div>
+  <div class="blk-row">
+    <div><div class="blk-lbl">TDS Already Credited</div><div class="blk-sub">Consultancy 194J + Salary 192</div></div>
+    <div class="blk-val ink" id="int_tds_credit">-</div>
+  </div>
+  <div class="blk-row">
+    <div><div class="blk-lbl">Advance Tax Paid (as logged)</div><div class="blk-sub">Total logged above</div></div>
+    <div class="blk-val ink" id="int_paid_total">-</div>
+  </div>
+  <div class="blk-row" style="background:#f5f1eb">
+    <div><div class="blk-lbl">Total Credit (TDS + Paid)</div><div class="blk-sub">Compared against 90% threshold</div></div>
+    <div class="blk-val ink" id="int_total_credit">-</div>
+  </div>
+  <div class="blk-row">
+    <div><div class="blk-lbl">% of Assessed Tax Covered</div><div class="blk-sub">Need &ge;90% by 31 March to avoid 234B</div></div>
+    <div class="blk-val" id="int_pct_covered">-</div>
+  </div>
+  <div class="blk-row" id="int_234b_row">
+    <div><div class="blk-lbl">Section 234B Interest</div><div class="blk-sub">1% per month on shortfall, from 1 April <span class="cite" style="margin-top:0;display:inline">[Sec 234B]</span></div></div>
+    <div class="blk-val" id="int_234b_amt">-</div>
+  </div>
+  <div class="blk-row" id="int_234c_row">
+    <div><div class="blk-lbl">Section 234C Interest</div><div class="blk-sub">1% for shortfall against 15 March target (44ADA) <span class="cite" style="margin-top:0;display:inline">[Sec 234C]</span></div></div>
+    <div class="blk-val" id="int_234c_amt">-</div>
+  </div>
+  <div class="blk-row" style="background:#fff3f0">
+    <div><div class="blk-lbl">Total Estimated Interest</div><div class="blk-sub">234B + 234C combined, as of today</div></div>
+    <div class="blk-val lg" id="int_total" style="font-size:16px;font-weight:700">-</div>
+  </div>
+  <div class="blk-row" style="display:block;padding:10px 14px">
+    <div style="font-size:11px;color:#7a7060;line-height:1.6">
+      Assumes calculation "as of today" (<span id="int_today_date">today</span>) if payment is still outstanding, using Rule 119A (part-month counts as full month, amounts rounded to nearest Rs.100). No 234C interest applies to the shortfall portion attributable to capital gains if paid in the next instalment or by 31 March. This is an estimate &mdash; confirm final interest with your CA before payment.
+    </div>
+  </div>
+</div>
+
+<!-- SLAB BREAKDOWN -->
+<div class="blk" id="prop_result_block">
+  <div class="blk-ttl">3.5 &mdash; Property Capital Gains &mdash; Calculation Detail</div>
+  <div class="blk-row">
+    <div><div class="blk-lbl">Method Used</div><div class="blk-sub">Lower of the two options, chosen automatically</div></div>
+    <div class="blk-val ink" id="prop_method_disp">-</div>
+  </div>
+  <div class="blk-row">
+    <div><div class="blk-lbl">Taxable Gain</div><div class="blk-sub">After indexation if applicable</div></div>
+    <div class="blk-val ink" id="prop_gain_disp">-</div>
+  </div>
+  <div class="blk-row">
+    <div><div class="blk-lbl">Tax on Property Gain</div><div class="blk-sub">Included in LTCG Tax above, before cess</div></div>
+    <div class="blk-val" id="prop_tax_disp">-</div>
+  </div>
+</div>
+
+<div class="slabs">
+  <div class="slab-ttl">Slab-wise Income Tax Breakdown</div>
+  <div class="sgrid">
+    <div class="scard new">
+      <div class="scard-hdr">New Regime</div>
+      <div class="srow"><span>0&ndash;4L @ 0%</span><span id="ns0">&mdash;</span></div>
+      <div class="srow"><span>4&ndash;8L @ 5%</span><span id="ns1">&mdash;</span></div>
+      <div class="srow"><span>8&ndash;12L @ 10%</span><span id="ns2">&mdash;</span></div>
+      <div class="srow"><span>12&ndash;16L @ 15%</span><span id="ns3">&mdash;</span></div>
+      <div class="srow"><span>16&ndash;20L @ 20%</span><span id="ns4">&mdash;</span></div>
+      <div class="srow"><span>20&ndash;24L @ 25%</span><span id="ns5">&mdash;</span></div>
+      <div class="srow"><span>Above 24L @ 30%</span><span id="ns6">&mdash;</span></div>
+    </div>
+    <div class="scard old">
+      <div class="scard-hdr">Old Regime</div>
+      <div class="srow"><span>0&ndash;2.5L @ 0%</span><span id="os0">&mdash;</span></div>
+      <div class="srow"><span>2.5&ndash;5L @ 5%</span><span id="os1">&mdash;</span></div>
+      <div class="srow"><span>5&ndash;10L @ 20%</span><span id="os2">&mdash;</span></div>
+      <div class="srow"><span>Above 10L @ 30%</span><span id="os3">&mdash;</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- J: ITR FORM INDICATOR -->
+<div class="blk" style="margin-top:14px">
+  <div class="blk-ttl">3.6 &mdash; Likely ITR Form &mdash; Based on Your Inputs</div>
+  <div class="blk-row" style="display:block;padding:14px">
+    <div style="text-align:center;margin-bottom:10px">
+      <span id="itr_form_badge" style="display:inline-block;background:#1d4e5e;color:#fff;font-size:20px;font-weight:700;padding:8px 20px;border-radius:10px;letter-spacing:0.03em">ITR-?</span>
+    </div>
+    <div style="font-size:12px;color:#5a5248;line-height:1.6;text-align:center" id="itr_form_reason">Enter your income details and tap Calculate to see an indication.</div>
+  </div>
+  <div class="blk-row" style="display:block;padding:10px 14px;background:#eaf5f3">
+    <div style="font-size:11px;color:#1d4e5e;line-height:1.6">
+      This is an automated indication based on the income types you've entered, not a determination. Rules on receipts thresholds, capital loss carry-forward, foreign assets, and directorships can also affect the correct form. Confirm with your CA before filing. <span class="cite" style="display:inline;margin-top:0">[CBDT ITR eligibility rules, AY 2026-27]</span>
+    </div>
+  </div>
+</div>
+
+<!-- K: TDS RECONCILIATION CHECKLIST -->
+<div class="notes" style="margin-top:14px">
+  <div class="notes-ttl">3.7 &mdash; Before You File &mdash; TDS Reconciliation Checklist</div>
+  <div class="note"><b>&#9744;</b><div class="note-body">Download Form 26AS from the income tax portal and match every TDS entry against what you've entered above (194J on consultancy, 192 on salary).</div></div>
+  <div class="note"><b>&#9744;</b><div class="note-body">Download AIS (Annual Information Statement) and cross-check interest, dividend, and any other reported income against what you've entered as "Other Income".</div></div>
+  <div class="note"><b>&#9744;</b><div class="note-body">Confirm your actual salary TDS from Form 16 (Part A) matches the auto-estimate or override used in the Salary TDS section above &mdash; employers don't always deduct exactly proportionally across the year.</div></div>
+  <div class="note"><b>&#9744;</b><div class="note-body">For property sales, check whether the buyer deducted TDS under Section 194-IA (1% if sale value &gt; Rs.50L) and that it appears in your 26AS.</div></div>
+  <div class="note"><b>&#9744;</b><div class="note-body">Verify advance tax challans (the figures you logged above) appear correctly in your Form 26AS under "Part C &mdash; Details of Tax Paid".</div></div>
+  <div class="note"><b>&#9744;</b><div class="note-body">If any TDS entry in 26AS doesn't match your records, contact the deductor before filing &mdash; mismatches are a common cause of processing delays and notices.</div></div>
+</div>
+
+<!-- NOTES -->
+<div class="notes">
+  <div class="notes-ttl">Important Notes</div>
+  <div class="note"><b>1</b><div class="note-body"><span class="note-ref">1.1</span>Salary gets its own standard deduction: Rs.75,000 (New Regime) or Rs.50,000 (Old Regime), applied automatically. <span class="cite">[Sec 16(ia)]</span></div></div>
+  <div class="note"><b>2</b><div class="note-body"><span class="note-ref">1.1</span>Enter ex-GST consultancy receipts only. GST collected is NOT income.</div></div>
+  <div class="note"><b>3</b><div class="note-body"><span class="note-ref">1.1</span>44ADA: 50% of consultancy receipts is deemed profit. No further deductions. <span class="cite">[Sec 44ADA]</span></div></div>
+  <div class="note"><b>4</b><div class="note-body"><span class="note-ref">1.1</span>44ADA eligibility: gross receipts up to Rs.50L, or up to Rs.75L if cash receipts are 5% or less of total receipts (i.e. 95%+ received digitally/through banking channels). Exceeding this &mdash; or receiving more than 5% in cash &mdash; means 44ADA cannot be used. <span class="cite">[Sec 44ADA(1), proviso]</span></div></div>
+  <div class="note"><b>5</b><div class="note-body"><span class="note-ref">1.1</span>Rental income: 30% standard deduction applied automatically. <span class="cite">[Sec 24(a)]</span></div></div>
+  <div class="note"><b>6</b><div class="note-body"><span class="note-ref">1.1</span>Other income (interest, dividends etc) added to slab income. <span class="cite">[Sec 56]</span></div></div>
+  <div class="note">
+    <b>7</b>
+    <div class="note-body">
+      <span class="note-ref">1.1</span>Home loan interest (Section 24b) &mdash; the key things to know:
+      <div style="margin-top:4px">&bull; <b>Self-occupied</b> (you live there): interest deduction capped at Rs.2,00,000/year, combined across up to 2 self-occupied properties. <b>Old Regime only</b> &mdash; New Regime gives no deduction here.</div>
+      <div>&bull; <b>Let-out</b> (rented to someone else): interest is fully deductible with no cap, netted against that property's rental income. This works under both regimes since it's part of computing the rental income itself, not a separate deduction.</div>
+      <div>&bull; <b>3rd+ self-occupied property</b>: automatically treated as "deemed let-out" and taxed on notional rent even if not actually rented, per Sec 23. You'll need to estimate a fair rental value for it.</div>
+      <div>&bull; <b>Pre-construction interest</b> (paid before the house was ready to move into): can't be claimed immediately &mdash; it's banked and released in 5 equal yearly instalments starting the year construction finishes.</div>
+      <div>&bull; If a let-out property's net position is a <b>loss</b>, only Rs.2,00,000 of that loss can offset your other income this year; any excess carries forward for up to 8 years (not tracked by this tool).</div>
+      <div style="margin-top:4px">This is a newer, more complex area of the calculator &mdash; the &#9888; caveats shown alongside your property entries flag the specific points that should be confirmed with a CA before relying on the numbers. <span class="cite">[Sec 24(b), Sec 23]</span></div>
+    </div>
+  </div>
+  <div class="note"><b>8</b><div class="note-body"><span class="note-ref">1.1</span>HRA (Sec 10(13A)) and Section 80GG &mdash; rent you pay for your own home:
+    <div style="margin-top:4px">&bull; <b>If you receive HRA</b> (part of salary): exemption is the least of (a) HRA actually received, (b) 50% of Basic+DA in a metro city or 40% elsewhere, (c) rent paid minus 10% of Basic+DA. "Basic+DA" is NOT your gross/CTC salary &mdash; check your payslip. For FY 2025-26, only Delhi, Mumbai, Kolkata, and Chennai count as metro (Bengaluru/Pune/Hyderabad/Ahmedabad join from FY 2026-27, not this year).</div>
+    <div>&bull; <b>If you don't receive HRA</b> (e.g. most 44ADA/self-employed income): Section 80GG allows a deduction of the least of (a) Rs.60,000/year, (b) 25% of total income, (c) rent paid minus 10% of total income &mdash; but ONLY if neither you, your spouse, nor your minor child owns a residential property in the city you live/work in.</div>
+    <div>&bull; Both are <b>Old Regime only</b>. Owning a rented-out property elsewhere while you personally rent your own home doesn't block either claim &mdash; the two are independent, as long as the "no property in your own city" condition is met for 80GG. <span class="cite">[Sec 10(13A), Rule 2A, Sec 80GG]</span></div>
+  </div></div>
+  <div class="note">
+    <b>9</b>
+    <div class="note-body">
+      <span class="note-ref">1.2</span>Capital gains only arise when you actually sell, redeem, or otherwise transfer an asset &mdash; not simply from its value going up while you hold it. An investment worth more than you paid, but not yet sold, has no tax impact this year. Grouped by tax rate once a gain is realised:
+      <div style="margin-top:4px">&bull; Equity/MF STCG &mdash; flat 20% <span class="cite">[Sec 111A]</span></div>
+      <div>&bull; Equity/MF LTCG &mdash; 12.5% above Rs.1.25L exempt <span class="cite">[Sec 112A]</span></div>
+      <div>&bull; Slab-Rate Gains (debt MF, short-term property/gold/unlisted) &mdash; taxed at your slab rate <span class="cite">[Sec 50AA for debt MF]</span></div>
+      <div>&bull; Gold/Unlisted LTCG &mdash; flat 12.5%, no exemption <span class="cite">[Sec 112]</span></div>
+      <div>&bull; Property LTCG &mdash; compares 12.5% flat vs 20% with indexation (pre-23-Jul-2024 purchases only), uses whichever is lower <span class="cite">[Finance (No. 2) Act 2024, proviso to Sec 112]</span></div>
+      <div style="margin-top:4px">"Transfer" is defined broadly (sale, exchange, redemption, maturity, and a few other specific events) &mdash; but simply holding an asset that's appreciated is never itself a taxable event. <span class="cite">[Sec 2(47)]</span></div>
+    </div>
+  </div>
+  <div class="note">
+    <b>10</b>
+    <div class="note-body">
+      <span class="note-ref">2.1</span>80C covers a combined Rs.1,50,000 limit across several things, not any one investment alone:
+      <div style="margin-top:4px">&bull; <b>EPF</b> (Employees' Provident Fund) &mdash; only if you're salaried and your employer runs a PF scheme. It's deducted automatically from your salary every month (check your payslip or Form 16) &mdash; you don't do anything to set it up or contribute manually. Only your own share counts here, not your employer's matching contribution.</div>
+      <div>&bull; <b>PPF</b> (Public Provident Fund) &mdash; a completely separate, optional savings account anyone can open at a bank or post office (whether salaried, self-employed, or 44ADA). You choose how much to deposit yourself, up to Rs.1,50,000/year on its own. Most people don't have both EPF and PPF &mdash; enter whichever applies to you, or both if you genuinely have both.</div>
+      <div>&bull; <b>ELSS</b> &mdash; equity mutual funds with a 3-year lock-in</div>
+      <div>&bull; <b>Life insurance premiums</b> &mdash; for self, spouse, or children</div>
+      <div>&bull; <b>Home loan principal</b> repayment (not interest &mdash; that's separate, under Sec 24b, not currently in this calculator)</div>
+      <div>&bull; <b>Children's tuition fees</b>, NSC, 5-year tax-saving FDs</div>
+      <div style="margin-top:4px">Add up everything you already have (EPF + insurance + home loan principal often fills much of this before you invest anything new) and enter the total, capped at Rs.1,50,000. This does NOT include your own NPS contribution under Sec 80CCD(1) if you're claiming the extra Rs.50,000 under 80CCD(1B) below instead &mdash; see that note for how the two interact. <span class="cite">[Sec 80C]</span></div>
+    </div>
+  </div>
+  <div class="note">
+    <b>11</b>
+    <div class="note-body">
+      <span class="note-ref">2.1</span>80D covers health insurance premiums (not general medical bills, except for uninsured senior citizens):
+      <div style="margin-top:4px">&bull; <b>Self/Spouse/Children bucket</b> &mdash; premiums for a policy covering yourself, spouse, and dependent children. Rs.25,000 normally, Rs.50,000 if you or anyone covered is 60+.</div>
+      <div>&bull; <b>Parents bucket</b> &mdash; a completely separate limit for premiums paid for either parent's health insurance, whether or not they're financially dependent on you. Rs.25,000 normally, Rs.50,000 if either parent is 60+.</div>
+      <div style="margin-top:4px">These two buckets are independent &mdash; maximum combined claim (both buckets, both senior citizens) is Rs.1,00,000. Premiums must be paid via bank transfer/card/UPI/cheque, not cash (preventive health check-ups up to Rs.5,000, included within these same limits, are the one exception that can be paid in cash). <span class="cite">[Sec 80D]</span></div>
+    </div>
+  </div>
+  <div class="note">
+    <b>12</b>
+    <div class="note-body">
+      <span class="note-ref">2.1</span>NPS (National Pension System) and savings account interest &mdash; three separate things, easy to mix up:
+      <div style="margin-top:4px">&bull; <b>80CCD(1) &mdash; your own regular NPS contribution</b>: sits INSIDE the Rs.1,50,000 80C limit above, not separate. If you contribute to NPS yourself, include it in the 80C total, don't enter it again here.</div>
+      <div>&bull; <b>80CCD(1B) &mdash; an EXTRA Rs.50,000</b> for your own NPS contribution, genuinely separate from the 80C cap. This is the one that lets you push your own-contribution deduction up to Rs.2,00,000 total (Rs.1.5L via 80C + Rs.50K here). Old Regime only.</div>
+      <div>&bull; <b>80CCD(2) &mdash; your employer's NPS contribution</b> (not your own money): capped at 14% of Basic+DA. This is the ONE deduction in this whole group that works under BOTH regimes &mdash; it's often the single biggest tax-saving lever left once you've moved to New Regime.</div>
+      <div>&bull; <b>80TTA &mdash; savings account interest</b>: up to Rs.10,000 of interest earned on a regular savings account (not fixed deposits or recurring deposits). Old Regime only. If you're 60+, a higher Rs.50,000 version (80TTB) applies instead, covering FDs too &mdash; not currently modelled separately here.</div>
+      <div style="margin-top:4px">"Basic+DA" for the 80CCD(2) cap is the same figure entered for HRA above &mdash; you don't need to enter it twice. <span class="cite">[Sec 80CCD, Sec 80TTA]</span></div>
+    </div>
+  </div>
+  <div class="note"><b>13</b><div class="note-body"><span class="note-ref">2.1</span>80C and 80D deductions available ONLY under Old Regime. <span class="cite">[Sec 80C, 80D, 115BAC]</span></div></div>
+  <div class="note"><b>14</b><div class="note-body"><span class="note-ref">2.2</span>Salary TDS (Sec 192) is auto-estimated from your slab tax share. Enter your actual payslip figure to override. <span class="cite">[Sec 192]</span></div></div>
+  <div class="note"><b>15</b><div class="note-body"><span class="note-ref">2.2</span>TDS under 194J deducted on consultancy fees only, auto-estimated at 10% unless you enter your actual rate. <span class="cite">[Sec 194J]</span></div></div>
+  <div class="note"><b>16</b><div class="note-body"><span class="note-ref">3.1</span>Surcharge applies above Rs.50L total income (10%/15%/25%, capped at 25% under New Regime; up to 37% under Old Regime above Rs.5Cr), with marginal relief applied. Health &amp; Education Cess of 4% is charged on tax plus surcharge, in that order. <span class="cite">[Finance Act 2025, First Schedule]</span></div></div>
+  <div class="note"><b>17</b><div class="note-body"><span class="note-ref">3.1</span>Switching regimes is NOT free-form if you have 44ADA/business income. Unlike salary-only taxpayers (who can pick a regime every year directly in ITR-1/2), anyone filing ITR-3 or ITR-4 must file Form 10-IEA to opt for the Old Regime, and gets only one lifetime switch back to New Regime after opting out. Choosing Old Regime this year is not risk-free to reverse later &mdash; confirm with your CA before filing Form 10-IEA. <span class="cite">[Form 10-IEA, Sec 115BAC(6)]</span></div></div>
+  <div class="note"><b>18</b><div class="note-body"><span class="note-ref">3.3</span>44ADA: pay 100% advance tax by 15 March. No quarterly instalments required. <span class="cite">[Sec 44AD(4)/211]</span></div></div>
+  <div class="note"><b>19</b><div class="note-body"><span class="note-ref">Applies overall</span>You can type numbers with or without commas. e.g. 6000000 or 60,00,000 both work.</div></div>
+  <div class="note"><b>20</b><div class="note-body"><span class="note-ref">Applies overall</span>This calculator applies only to FY 2025-26 / AY 2026-27 rules. It will not be updated automatically for future years &mdash; check the title for the correct FY/AY before use.</div></div>
+  <div class="note"><b>21</b><div class="note-body"><span class="note-ref">Applies overall</span>For estimation only. Consult your CA before paying advance tax or filing ITR.</div></div>
+</div>
+
+<div class="ftr">&copy; Advanced Tax Calculator FY2025-26</div>
+
+<script type="text/javascript">
+
+/* ---- FORMAT HELPERS ---- */
+function parseINR(str) {
+  if (!str) { return 0; }
+  var cleaned = String(str).replace(/,/g, '').replace(/Rs\./g, '').trim();
+  var n = parseFloat(cleaned);
+  return isNaN(n) ? 0 : n;
+}
+
+function fmtINR(n) {
+  var rounded = Math.round(n);
+  if (rounded === 0) { return '-'; }
+  var s = String(rounded);
+  var result = s.slice(-3);
+  s = s.slice(0, s.length - 3);
+  while (s.length > 2) {
+    result = s.slice(-2) + ',' + result;
+    s = s.slice(0, s.length - 2);
+  }
+  if (s.length > 0) { result = s + ',' + result; }
+  return 'Rs.' + result;
+}
+
+function fmtPct(n) {
+  return (n * 100).toFixed(1) + '%';
+}
+
+/* Format input field value with Indian commas on blur */
+function fmtInput(id) {
+  var el = document.getElementById(id);
+  if (!el) { return; }
+  var n = parseINR(el.value);
+  if (n > 0) {
+    var s = String(Math.round(n));
+    var result = s.slice(-3);
+    s = s.slice(0, s.length - 3);
+    while (s.length > 2) {
+      result = s.slice(-2) + ',' + result;
+      s = s.slice(0, s.length - 2);
+    }
+    if (s.length > 0) { result = s + ',' + result; }
+    el.value = result;
+  } else {
+    el.value = '0';
+  }
+}
+
+/* Strip commas on focus so user can type freely */
+function stripInput(id) {
+  var el = document.getElementById(id);
+  if (!el) { return; }
+  var n = parseINR(el.value);
+  el.value = n > 0 ? String(Math.round(n)) : '';
+}
+
+/* ---- SLAB CALC ---- */
+function calcSlab(income, slabs) {
+  var tax = 0;
+  var parts = [];
+  var i, fr, to, rt, inBand, cap, t;
+  for (i = 0; i < slabs.length; i++) {
+    fr = slabs[i][0]; to = slabs[i][1]; rt = slabs[i][2];
+    inBand = 0;
+    if (income > fr) {
+      cap = income < to ? income : to;
+      inBand = cap - fr;
+    }
+    t = inBand * rt;
+    parts.push(t);
+    tax += t;
+  }
+  return { tax: tax, parts: parts };
+}
+
+var NEW_SLABS = [
+  [0,       400000,    0.00],
+  [400000,  800000,    0.05],
+  [800000,  1200000,   0.10],
+  [1200000, 1600000,   0.15],
+  [1600000, 2000000,   0.20],
+  [2000000, 2400000,   0.25],
+  [2400000, 999999999, 0.30]
+];
+
+var OLD_SLABS = [
+  [0,       250000,    0.00],
+  [250000,  500000,    0.05],
+  [500000,  1000000,   0.20],
+  [1000000, 999999999, 0.30]
+];
+
+/* Cost Inflation Index table, FY 2001-02 (base=100) to FY 2025-26.
+   Source: CBDT Notification No. 70/2025 dated 01-07-2025 and preceding notifications. */
+var CII_TABLE = {
+  2001: 100, 2002: 105, 2003: 109, 2004: 113, 2005: 117,
+  2006: 122, 2007: 129, 2008: 137, 2009: 148, 2010: 167,
+  2011: 184, 2012: 200, 2013: 220, 2014: 240, 2015: 254,
+  2016: 264, 2017: 272, 2018: 280, 2019: 289, 2020: 301,
+  2021: 317, 2022: 331, 2023: 348, 2024: 363, 2025: 376
+};
+var CII_SALE_YEAR = 376; /* FY 2025-26 */
+
+/* Returns CII for a given purchase year, using base year 100 if before 2001 or unrecognised */
+function getCII(year) {
+  if (!year || year < 2001) { return 100; }
+  if (CII_TABLE[year] !== undefined) { return CII_TABLE[year]; }
+  return 100;
+}
+
+/* Computes property LTCG tax two ways (12.5% flat vs 20% with indexation) and returns the lower.
+   Only called for property purchased before 23 July 2024. */
+function calcPropertyLTCG(salePrice, purchasePrice, purchaseYear) {
+  var gainFlat = salePrice - purchasePrice;
+  if (gainFlat < 0) { gainFlat = 0; }
+  var taxFlat = gainFlat * 0.125;
+
+  var ciiPurchase = getCII(purchaseYear);
+  var indexedCost = purchasePrice * (CII_SALE_YEAR / ciiPurchase);
+  var gainIndexed = salePrice - indexedCost;
+  if (gainIndexed < 0) { gainIndexed = 0; }
+  var taxIndexed = gainIndexed * 0.20;
+
+  if (taxIndexed < taxFlat) {
+    return { tax: taxIndexed, gain: gainIndexed, method: 'indexed', rate: '20% with indexation' };
+  }
+  return { tax: taxFlat, gain: gainFlat, method: 'flat', rate: '12.5% without indexation' };
+}
+
+/* Surcharge rate slabs by total income, with regime-specific cap.
+   isNewRegime true caps max surcharge at 25% (income > 2Cr band stays at 25%, no 37% band).
+   isNewRegime false (Old Regime) allows the 37% band above 5Cr. */
+function surchargeRate(totalIncome, isNewRegime) {
+  if (totalIncome > 50000000) { return isNewRegime ? 0.25 : 0.37; }
+  if (totalIncome > 20000000) { return 0.25; }
+  if (totalIncome > 10000000) { return 0.15; }
+  if (totalIncome > 5000000)  { return 0.10; }
+  return 0;
+}
+
+/* Thresholds where surcharge rate steps up, used for marginal relief */
+var SURCHARGE_THRESHOLDS = [5000000, 10000000, 20000000, 50000000];
+
+/* Calculates surcharge with marginal relief applied.
+   totalIncome = total taxable income (slab + STCG + LTCG) used to determine which surcharge band applies.
+   taxBeforeSurcharge = income tax computed on that income (before cess).
+   Returns the surcharge amount after marginal relief. */
+function calcSurcharge(totalIncome, taxBeforeSurcharge, isNewRegime) {
+  var rate = surchargeRate(totalIncome, isNewRegime);
+  if (rate === 0) { return 0; }
+
+  var rawSurcharge = taxBeforeSurcharge * rate;
+  var taxPlusSurcharge = taxBeforeSurcharge + rawSurcharge;
+
+  /* Find the threshold this income crossed into the current band */
+  var threshold = 0;
+  var i;
+  for (i = 0; i < SURCHARGE_THRESHOLDS.length; i++) {
+    if (totalIncome > SURCHARGE_THRESHOLDS[i]) { threshold = SURCHARGE_THRESHOLDS[i]; }
+  }
+
+  if (threshold === 0) { return rawSurcharge; }
+
+  /* Marginal relief: tax+surcharge should not exceed
+     (tax at threshold income, no surcharge on that slab if below 50L) + (income above threshold)
+     Simplified: relief caps total increase to the excess income over the threshold. */
+  var priorRate = surchargeRate(threshold, isNewRegime);
+  /* Tax at exactly the threshold, with surcharge appropriate to threshold band (approx using same effective tax rate) */
+  var taxAtThreshold = taxBeforeSurcharge * (threshold / totalIncome); /* approximation of tax at threshold income */
+  var surchargeAtThreshold = taxAtThreshold * priorRate;
+  var totalAtThreshold = taxAtThreshold + surchargeAtThreshold;
+
+  var excessIncome = totalIncome - threshold;
+  var maxAllowedTotal = totalAtThreshold + excessIncome;
+
+  if (taxPlusSurcharge > maxAllowedTotal) {
+    var relievedSurcharge = maxAllowedTotal - taxBeforeSurcharge;
+    return relievedSurcharge > 0 ? relievedSurcharge : 0;
+  }
+
+  return rawSurcharge;
+}
+
+function setEl(id, val) {
+  var el = document.getElementById(id);
+  if (el) { el.textContent = val; }
+}
+
+/* ---- MAIN CALC ---- */
+function doCalc() {
+  var salary = parseINR(document.getElementById('salary').value);
+  var gross  = parseINR(document.getElementById('consultancy').value);
+  var other  = parseINR(document.getElementById('other').value);
+  var d80c   = parseINR(document.getElementById('ded80c').value);
+  var d80ds  = parseINR(document.getElementById('ded80d_self').value);
+  var d80dm  = parseINR(document.getElementById('ded80d_mother').value);
+
+  /* NPS 80CCD(1B): additional Rs.50,000, own contribution, on top of 80C.
+     Old Regime only. */
+  var d80ccd1b_raw = parseINR(document.getElementById('ded80ccd1b').value);
+  var d80ccd1b = Math.min(d80ccd1b_raw, 50000);
+
+  /* NPS 80CCD(2): employer's contribution, capped at 14% of Basic+DA.
+     Works under BOTH regimes - reuses the Basic+DA figure already
+     collected for HRA above, so it isn't asked for twice. */
+  var d80ccd2_raw = parseINR(document.getElementById('ded80ccd2').value);
+  var hraBasicDAForNPS = parseINR(document.getElementById('hra_basic_da').value);
+  var d80ccd2Cap = hraBasicDAForNPS > 0 ? hraBasicDAForNPS * 0.14 : d80ccd2_raw; /* if Basic+DA not entered, don't silently zero it out - trust the raw figure but still flag if implausible */
+  var d80ccd2 = Math.min(d80ccd2_raw, d80ccd2Cap);
+
+  /* 80TTA: savings account interest, Rs.10,000 cap. Old Regime only. */
+  var d80tta_raw = parseINR(document.getElementById('ded80tta').value);
+  var d80tta = Math.min(d80tta_raw, 10000);
+
+  /* Live over-limit warnings for the new fields */
+  var warn1b = document.getElementById('ded80ccd1b_warn_row');
+  if (warn1b) { warn1b.style.display = d80ccd1b_raw > 50000 ? 'flex' : 'none'; }
+  var warn2 = document.getElementById('ded80ccd2_warn_row');
+  if (warn2) { warn2.style.display = (hraBasicDAForNPS > 0 && d80ccd2_raw > d80ccd2Cap) ? 'flex' : 'none'; }
+  var warnTta = document.getElementById('ded80tta_warn_row');
+  if (warnTta) { warnTta.style.display = d80tta_raw > 10000 ? 'flex' : 'none'; }
+
+  /* ---- PROPERTY / HOME LOAN POSITION ---- */
+  var propMode = window.propertyMode || 'none';
+  var propPosition = { hasProperties: false, selfOccInterestCapped: 0, selfOccOverCap: false,
+    letOutLossCapped: 0, letOutNetTotal: 0, letOutLossOverCap: false, letOutCount: 0, deemedCount: 0, occSeen: 0 };
+  var precon_instalment = 0;
+
+  if (propMode === 'one') {
+    var isOcc1 = window.propSingleIsOcc; /* true, false, or null (genuinely unanswered) */
+    var hasLoan1 = window.propSingleHasLoan === true;
+    var rent1 = parseINR(document.getElementById('prop1_rent').value);
+    var interest1 = hasLoan1 ? parseINR(document.getElementById('prop1_interest').value) : 0;
+    propPosition.occupancyUnanswered = (isOcc1 === null || isOcc1 === undefined);
+    if (isOcc1 === true) {
+      propPosition.selfOccInterestCapped = Math.min(interest1, 200000);
+      propPosition.selfOccOverCap = interest1 > 200000;
+      propPosition.occSeen = 1;
+    } else if (isOcc1 === false) {
+      var net1 = (rent1 * 0.7) - interest1;
+      propPosition.letOutNetTotal = net1;
+      propPosition.letOutLossCapped = net1 < -200000 ? -200000 : net1;
+      propPosition.letOutLossOverCap = net1 < -200000;
+      propPosition.letOutCount = 1;
+    }
+    /* If occupancy hasn't been answered yet, this property contributes
+       nothing to the tax calculation - better to show zero and flag it
+       than silently guess Self-Occupied or Let-Out. */
+    propPosition.hasProperties = (isOcc1 !== null && isOcc1 !== undefined) && (rent1 > 0 || interest1 > 0);
+
+    /* Pre-construction interest: 1/5th per year for 5 years from completion year (only if loan is active) */
+    var preconAmt1 = hasLoan1 ? parseINR(document.getElementById('prop1_precon_amt').value) : 0;
+    var preconYear1 = parseInt(document.getElementById('prop1_precon_year').value, 10) || 0;
+    if (preconAmt1 > 0 && preconYear1 > 0) {
+      var currentFY = 2025; /* FY 2025-26 */
+      var yearsSinceCompletion = currentFY - preconYear1;
+      if (yearsSinceCompletion >= 0 && yearsSinceCompletion < 5) {
+        precon_instalment = preconAmt1 / 5;
+      }
+    }
+  } else if (propMode === 'multi') {
+    propPosition = calcPropertyPosition();
+  }
+
+  /* Combined home loan interest deduction (self-occupied, Old Regime only),
+     including this year's pre-construction instalment, still capped at 2L total */
+  var homeLoanInterestDeduction = Math.min(propPosition.selfOccInterestCapped + precon_instalment, 200000);
+
+  /* Net rental/property income entering slab income (let-out + deemed let-out,
+     after the Rs.2L loss set-off cap) */
+  var netR = propPosition.letOutLossCapped;
+
+  /* Update the combined property summary display */
+  updatePropertySummaryDisplay(propPosition, homeLoanInterestDeduction, precon_instalment);
+
+  /* Show a warning if entered amount exceeds the statutory max - the value
+     itself is still capped below, so this is a heads-up, not a validation error.
+     (Also updated live on every keystroke via onAnyInputChanged.) */
+  updateDeductionWarnings();
+
+  /* Capital gains inputs */
+  var stcg_equity = parseINR(document.getElementById('stcg_equity').value);
+  var ltcg_equity = parseINR(document.getElementById('ltcg_equity').value);
+  var cg_slab     = parseINR(document.getElementById('cg_slab').value);
+  var ltcg_other  = parseINR(document.getElementById('ltcg_other').value);
+
+  var prop_sale = parseINR(document.getElementById('prop_sale').value);
+  var prop_cost = parseINR(document.getElementById('prop_cost').value);
+  var prop_date_str = document.getElementById('prop_purchase_date').value;
+  var prop_year = parseInt(document.getElementById('prop_purchase_year').value, 10) || 0;
+
+  if (d80c  > 150000) { d80c  = 150000; }
+  if (d80ds > 25000)  { d80ds = 25000;  }
+  if (d80dm > 50000)  { d80dm = 50000;  }
+
+  /* Sum TDS across all salary/consultancy source rows (0 if none entered yet) */
+  var salSourcesSum = sumSalarySourceTDS();
+  var consultSourcesSum = sumConsultSourceTDS();
+  var sal_tds_override = salSourcesSum.total; /* monthly total across all employers, 0 if none entered */
+  var consult_tds_override_monthly_total = consultSourcesSum.total; /* monthly total across all clients */
+
+  /* The TDS section itself is always visible (matches 80C/80D and the advance tax
+     tracker above it) - only the individual employer/client rows and their
+     "add another" buttons are conditional on that income type being present.
+     (Also updated live on every keystroke via onAnyInputChanged - see updateTDSRowVisibility.) */
+  updateTDSRowVisibility();
+
+  /* Property: determine if pre or post 23 July 2024, show/hide relevant fields */
+  var propYearRow = document.getElementById('prop_year_row');
+  var propNoteRow = document.getElementById('prop_indexation_note');
+  var propNoteText = document.getElementById('prop_indexation_text');
+  var prop_pre_july2024 = false;
+  var prop_gain = 0;
+  var prop_tax = 0;
+  var prop_method_label = '';
+  var purchaseDate = null;
+
+  /* Parse dd/mm/yyyy format */
+  if (prop_date_str) {
+    var dateParts = prop_date_str.split('/');
+    if (dateParts.length === 3) {
+      var dd = parseInt(dateParts[0], 10);
+      var mm = parseInt(dateParts[1], 10);
+      var yyyy = parseInt(dateParts[2], 10);
+      if (dd && mm && yyyy && yyyy > 1900) {
+        purchaseDate = new Date(yyyy, mm - 1, dd);
+      }
+    }
+  }
+
+  if (purchaseDate) {
+    var cutoff = new Date(2024, 6, 23); /* 23 July 2024, month is 0-indexed */
+    prop_pre_july2024 = purchaseDate < cutoff;
+
+    if (prop_pre_july2024) {
+      if (propYearRow) { propYearRow.style.display = 'block'; }
+      if (propNoteRow) { propNoteRow.style.display = 'block'; }
+      if (propNoteText) {
+        propNoteText.textContent = 'Purchased before 23 July 2024 \u2014 both options (12.5% flat vs 20% with indexation) are compared below, and the lower one is used automatically.';
+      }
+      if (prop_sale > 0 && prop_cost > 0) {
+        var propResult = calcPropertyLTCG(prop_sale, prop_cost, prop_year || purchaseDate.getFullYear());
+        prop_gain = propResult.gain;
+        prop_tax = propResult.tax;
+        prop_method_label = propResult.rate;
+      }
+    } else {
+      if (propYearRow) { propYearRow.style.display = 'none'; }
+      if (propNoteRow) {
+        propNoteRow.style.display = 'block';
+        propNoteRow.style.background = '#fff3f0';
+      }
+      if (propNoteText) {
+        propNoteText.textContent = 'Purchased on/after 23 July 2024 \u2014 only the flat 12.5% rate applies, no indexation available.';
+      }
+      if (prop_sale > 0 && prop_cost > 0) {
+        prop_gain = Math.max(0, prop_sale - prop_cost);
+        prop_tax = prop_gain * 0.125;
+        prop_method_label = '12.5% without indexation';
+      }
+    }
+  } else {
+    if (propYearRow) { propYearRow.style.display = 'none'; }
+    if (propNoteRow) { propNoteRow.style.display = 'none'; }
+  }
+
+  setEl('prop_gain_disp', prop_gain > 0 ? fmtINR(prop_gain) : '-');
+  setEl('prop_tax_disp', prop_tax > 0 ? fmtINR(prop_tax) : '-');
+  setEl('prop_method_disp', prop_method_label || '-');
+
+  /* ---- HRA (Sec 10(13A)) / SECTION 80GG ----
+     Old Regime only.
+     HRA exemption = least of: actual HRA received, 50%/40% of Basic+DA
+     (metro/non-metro), rent paid minus 10% of Basic+DA. This is structurally
+     a salary-only exemption (it only exists as a salary component), so it
+     reduces taxable SALARY income specifically.
+     80GG (no HRA received) = least of: Rs.60,000/year, 25% of total income,
+     rent paid minus 10% of total income - only if the person doesn't own a
+     home in the city they live in. Unlike HRA, this is a genuine Chapter
+     VI-A deduction against TOTAL taxable income, not salary specifically -
+     it's the reason a pure-44ADA/self-employed person with no salary can
+     still claim it. */
+  var hraExemption = 0;
+  var sec80ggDeduction = 0;
+  var hraResultLines = [];
+  var hraBindingReason = '';
+
+  if (window.hraPaysRent === true) {
+    if (window.hraHasHra === true) {
+      var hraRentPaid = parseINR(document.getElementById('hra_rent_paid').value);
+      var hraReceived = parseINR(document.getElementById('hra_received').value);
+      var hraBasicDA = parseINR(document.getElementById('hra_basic_da').value);
+      var hraMetroAnswered = (window.hraIsMetro === true || window.hraIsMetro === false);
+      var hraPct = window.hraIsMetro === true ? 0.5 : 0.4;
+
+      var cond1 = hraReceived;
+      var cond2 = hraBasicDA * hraPct;
+      var cond3 = hraRentPaid - (hraBasicDA * 0.1);
+      if (cond3 < 0) { cond3 = 0; }
+
+      if (hraMetroAnswered) {
+        hraExemption = Math.min(cond1, cond2, cond3);
+        if (hraExemption < 0) { hraExemption = 0; }
+
+        if (hraExemption === cond1) { hraBindingReason = 'actual HRA received is the smallest of the three'; }
+        else if (hraExemption === cond2) { hraBindingReason = (window.hraIsMetro ? '50%' : '40%') + ' of Basic+DA is the smallest of the three'; }
+        else { hraBindingReason = 'rent paid minus 10% of Basic+DA is the smallest of the three'; }
+
+        if (hraBasicDA > 0 || hraRentPaid > 0 || hraReceived > 0) {
+          hraResultLines.push('HRA received: ' + fmtINR(cond1));
+          hraResultLines.push((window.hraIsMetro ? '50%' : '40%') + ' of Basic+DA: ' + fmtINR(cond2));
+          hraResultLines.push('Rent paid minus 10% of Basic+DA: ' + fmtINR(cond3));
+          hraResultLines.push('Exempt HRA (least of the three, ' + hraBindingReason + '): ' + fmtINR(hraExemption));
+        }
+      } else {
+        hraResultLines.push('Please choose Metro or Non-Metro above to compute your HRA exemption.');
+      }
+    } else if (window.hraHasHra === false) {
+      var gg_rentPaid = parseINR(document.getElementById('hra_80gg_rent_paid').value);
+      if (window.hra80ggConfirmed === true && gg_rentPaid > 0) {
+        /* Total income approximation for 80GG uses gross slab income before
+           this deduction itself, per the "adjusted total income" definition.
+           Uses 44ADA presumptive income (50% of gross receipts), not the
+           full gross receipts figure, since that's what actually enters
+           taxable income under Sec 44ADA. */
+        var gg_totalIncomeApprox = salary + (gross * 0.5) + other; /* approximate; capital gains/property excluded per adjusted total income rules */
+        var ggCond1 = 60000;
+        var ggCond2 = gg_totalIncomeApprox * 0.25;
+        var ggCond3 = gg_rentPaid - (gg_totalIncomeApprox * 0.1);
+        if (ggCond3 < 0) { ggCond3 = 0; }
+        sec80ggDeduction = Math.min(ggCond1, ggCond2, ggCond3);
+        if (sec80ggDeduction < 0) { sec80ggDeduction = 0; }
+
+        if (sec80ggDeduction === ggCond1) { hraBindingReason = 'the Rs.60,000/year cap is the smallest of the three'; }
+        else if (sec80ggDeduction === ggCond2) { hraBindingReason = '25% of total income is the smallest of the three'; }
+        else { hraBindingReason = 'rent paid minus 10% of total income is the smallest of the three'; }
+
+        hraResultLines.push('Rs.60,000/year cap: ' + fmtINR(ggCond1));
+        hraResultLines.push('25% of total income (approx): ' + fmtINR(ggCond2));
+        hraResultLines.push('Rent paid minus 10% of total income: ' + fmtINR(ggCond3));
+        hraResultLines.push('Deduction under Sec 80GG (least of the three, ' + hraBindingReason + '): ' + fmtINR(sec80ggDeduction));
+      } else if (window.hra80ggConfirmed === false) {
+        hraResultLines.push('Section 80GG does not apply \u2014 you\u2019ve indicated you own a residential property in the city you live/work in.');
+      } else if (window.hra80ggConfirmed === null || window.hra80ggConfirmed === undefined) {
+        hraResultLines.push('Please confirm above whether you own a property in the city you live/work in, to compute your Sec 80GG deduction.');
+      }
+    }
+  }
+
+  var hraResultRow = document.getElementById('hra_result_row');
+  var hraResultLinesEl = document.getElementById('hra_result_lines');
+  if (hraResultRow && hraResultLinesEl) {
+    if (hraResultLines.length > 0) {
+      hraResultLinesEl.innerHTML = hraResultLines.map(function(l) { return '<div>' + l + '</div>'; }).join('');
+      hraResultRow.style.display = 'flex';
+    } else {
+      hraResultRow.style.display = 'none';
+    }
+  }
+
+  /* Standard deduction on salary: Rs.75,000 New Regime, Rs.50,000 Old Regime */
+  var sal_sd_new = salary > 0 ? Math.min(salary, 75000) : 0;
+  var sal_sd_old = salary > 0 ? Math.min(salary, 50000) : 0;
+  var sal_net_new = salary - sal_sd_new;
+  var sal_net_old = salary - sal_sd_old - hraExemption;
+  if (sal_net_old < 0) { sal_net_old = 0; }
+
+  var pres   = gross * 0.5;
+  /* netR is already computed above from the property system */
+
+  /* Capital gains tax by bucket */
+  var ltcg_exempt   = 125000;
+  var ltcg_eq_taxable = ltcg_equity > ltcg_exempt ? ltcg_equity - ltcg_exempt : 0;
+  var stcg_eq_tax   = stcg_equity * 0.20;
+  var ltcg_eq_tax   = ltcg_eq_taxable * 0.125;
+  var ltcg_other_tax = ltcg_other * 0.125;
+  /* prop_tax already computed above */
+  var total_cg_flat_tax = stcg_eq_tax + ltcg_eq_tax + ltcg_other_tax + prop_tax;
+  var total_cg_amount   = stcg_equity + ltcg_equity + ltcg_other + prop_gain;
+
+  /* cg_slab goes into slab_base, NOT into flat-tax bucket */
+
+  /* Slab base differs slightly by regime due to different standard deduction */
+  var slab_base_new = sal_net_new + pres + netR + other + cg_slab;
+  var slab_base_old = sal_net_old + pres + netR + other + cg_slab;
+
+  /* NEW REGIME
+     80CCD(2) - employer NPS contribution - is the one deduction from this
+     group that survives under New Regime, so it's subtracted here too. */
+  var nt         = slab_base_new - d80ccd2;
+  if (nt < 0) { nt = 0; }
+  var nr         = calcSlab(nt, NEW_SLABS);
+  var n_pre_cess = nr.tax + total_cg_flat_tax;
+  var n_total_income = nt + total_cg_amount;
+  var n_surcharge = calcSurcharge(n_total_income, n_pre_cess, true);
+  var n_tax_plus_surcharge = n_pre_cess + n_surcharge;
+  var nc         = n_tax_plus_surcharge * 0.04;
+  var ntot       = n_tax_plus_surcharge + nc;
+
+  /* OLD REGIME */
+  var ded        = d80c + d80ds + d80dm + homeLoanInterestDeduction + sec80ggDeduction + d80ccd1b + d80ccd2 + d80tta;
+  var ot         = slab_base_old - ded;
+  if (ot < 0) { ot = 0; }
+  var or2        = calcSlab(ot, OLD_SLABS);
+  var o_pre_cess = or2.tax + total_cg_flat_tax;
+  var o_total_income = ot + total_cg_amount;
+  var o_surcharge = calcSurcharge(o_total_income, o_pre_cess, false);
+  var o_tax_plus_surcharge = o_pre_cess + o_surcharge;
+  var oc         = o_tax_plus_surcharge * 0.04;
+  var otot       = o_tax_plus_surcharge + oc;
+
+  /* TOTAL CASH & EFFECTIVE RATES */
+  /* Property cash contribution: let-out/deemed net position (rent minus interest,
+     the real cash flow), self-occupied contributes no rental cash since you live there */
+  var totalCash    = salary + gross + propPosition.letOutNetTotal + other + stcg_equity + ltcg_equity + ltcg_other + prop_gain + cg_slab;
+  var neff         = totalCash > 0 ? ntot / totalCash : 0;
+  var oeff         = totalCash > 0 ? otot / totalCash : 0;
+  var nmth         = (totalCash - ntot) / 12;
+  var omth         = (totalCash - otot) / 12;
+
+  /* CONSULTANCY TDS (194J) - auto-estimated at flat 10%, unless the user has
+     entered actual monthly TDS figures for one or more clients above */
+  var using_consult_override = consult_tds_override_monthly_total > 0;
+  var tds_monthly, tds_annual;
+  if (using_consult_override) {
+    tds_monthly = consult_tds_override_monthly_total;
+    tds_annual  = tds_monthly * 12;
+  } else {
+    tds_annual   = gross * 0.10;
+    tds_monthly  = tds_annual / 12;
+  }
+  var net_consult  = (gross / 12) - tds_monthly;
+
+  /* SALARY TDS (Section 192) - auto-estimated as this salary's share of slab tax,
+     unless user has entered an override monthly figure from their payslip */
+  var sal_tds_annual_new, sal_tds_annual_old, sal_tds_monthly_new, sal_tds_monthly_old;
+  var using_override = sal_tds_override > 0;
+
+  if (using_override) {
+    sal_tds_monthly_new = sal_tds_override;
+    sal_tds_monthly_old = sal_tds_override;
+    sal_tds_annual_new  = sal_tds_override * 12;
+    sal_tds_annual_old  = sal_tds_override * 12;
+  } else {
+    /* Estimate: salary's proportional share of each regime's slab tax */
+    var salShareNew = slab_base_new > 0 ? sal_net_new / slab_base_new : 0;
+    var salShareOld = slab_base_old > 0 ? sal_net_old / slab_base_old : 0;
+    sal_tds_annual_new = nr.tax * salShareNew;
+    sal_tds_annual_old = or2.tax * salShareOld;
+    sal_tds_monthly_new = sal_tds_annual_new / 12;
+    sal_tds_monthly_old = sal_tds_annual_old / 12;
+  }
+
+  var sal_net_monthly_new = (salary / 12) - sal_tds_monthly_new;
+
+  /* ADVANCE TAX - total tax less ALL TDS already collected (consultancy + salary) */
+  var n_total_tds = tds_annual + sal_tds_annual_new;
+  var o_total_tds = tds_annual + sal_tds_annual_old;
+
+  var n_adv        = ntot - n_total_tds;
+  if (n_adv < 0) { n_adv = 0; }
+  var o_adv        = otot - o_total_tds;
+  if (o_adv < 0) { o_adv = 0; }
+
+  var n_mth_set    = n_adv / 12;
+  var o_mth_set    = o_adv / 12;
+
+  var total_mth    = totalCash / 12;
+  var n_net_mth    = total_mth - tds_monthly - sal_tds_monthly_new - n_mth_set;
+  var o_net_mth    = total_mth - tds_monthly - sal_tds_monthly_old - o_mth_set;
+
+  var n_refund     = n_total_tds > ntot ? n_total_tds - ntot : 0;
+  var o_refund     = o_total_tds > otot ? o_total_tds - otot : 0;
+
+  var sav          = otot - ntot;
+
+  /* ---- UPDATE DOM ---- */
+  setEl('new_taxable',    fmtINR(nt));
+  setEl('new_tax_before', fmtINR(nr.tax));
+  setEl('new_stcg_tax',   stcg_equity > 0 ? fmtINR(stcg_eq_tax) : '-');
+  setEl('new_ltcg_tax',   (ltcg_eq_taxable > 0 || ltcg_other > 0 || prop_gain > 0) ? fmtINR(ltcg_eq_tax + ltcg_other_tax + prop_tax) : '-');
+  setEl('new_surcharge',  n_surcharge > 0 ? fmtINR(n_surcharge) : '-');
+  setEl('new_cess',       fmtINR(nc));
+  setEl('new_total_tax',  fmtINR(ntot));
+  setEl('new_eff_rate',   fmtPct(neff));
+  setEl('new_monthly',    fmtINR(nmth));
+
+  setEl('old_taxable',    fmtINR(ot));
+  setEl('old_tax_before', fmtINR(or2.tax));
+  setEl('old_stcg_tax',   stcg_equity > 0 ? fmtINR(stcg_eq_tax) : '-');
+  setEl('old_ltcg_tax',   (ltcg_eq_taxable > 0 || ltcg_other > 0 || prop_gain > 0) ? fmtINR(ltcg_eq_tax + ltcg_other_tax + prop_tax) : '-');
+  setEl('old_surcharge',  o_surcharge > 0 ? fmtINR(o_surcharge) : '-');
+  setEl('old_cess',       fmtINR(oc));
+  setEl('old_total_tax',  fmtINR(otot));
+  setEl('old_eff_rate',   fmtPct(oeff));
+  setEl('old_monthly',    fmtINR(omth));
+
+  var savAbs = sav < 0 ? -sav : sav;
+  setEl('savings_amount', fmtINR(savAbs));
+  if (sav > 0) {
+    setEl('savings_sub', 'New Regime saves ' + fmtINR(Math.round(sav / 12)) + ' per month');
+  } else if (sav < 0) {
+    setEl('savings_sub', 'Old Regime saves ' + fmtINR(Math.round(-sav / 12)) + ' per month');
+  } else {
+    setEl('savings_sub', 'Both regimes result in equal tax');
+  }
+
+  /* Build a plain-language TDS breakdown line for the Advance Tax Planner,
+     replacing the old standalone "TDS Already Deducted" blocks */
+  var breakdownParts = [];
+  if (gross > 0) {
+    var consultLabel = using_consult_override ? 'from clients entered above' : 'auto 10%';
+    breakdownParts.push('Consultancy (194J): ' + fmtINR(tds_monthly) + '/mo, ' + fmtINR(tds_annual) + '/yr (' + consultLabel + ')');
+  }
+  if (salary > 0) {
+    var salLabel = using_override ? 'from employers entered above' : 'auto-estimated';
+    breakdownParts.push('Salary (192): ' + fmtINR(sal_tds_monthly_new) + '/mo, ' + fmtINR(sal_tds_annual_new) + '/yr (' + salLabel + ', New Regime basis)');
+  }
+  if (breakdownParts.length > 0) {
+    setEl('tds_breakdown_text', 'TDS breakdown \u2014 ' + breakdownParts.join('; ') + '.');
+  } else {
+    setEl('tds_breakdown_text', 'No TDS to show yet \u2014 enter consultancy or salary income above.');
+  }
+
+  setEl('atp_new_total',  fmtINR(ntot));
+  setEl('atp_new_tds',    fmtINR(n_total_tds));
+  setEl('atp_new_adv',    n_adv > 0 ? fmtINR(n_adv) : 'Nil');
+  setEl('atp_new_mth',    n_mth_set > 0 ? fmtINR(n_mth_set) : 'Nil');
+  setEl('atp_new_net',    fmtINR(n_net_mth));
+  setEl('atp_new_refund', n_refund > 0 ? fmtINR(n_refund) : 'Nil');
+
+  setEl('atp_old_total',  fmtINR(otot));
+  setEl('atp_old_tds',    fmtINR(o_total_tds));
+  setEl('atp_old_adv',    o_adv > 0 ? fmtINR(o_adv) : 'Nil');
+  setEl('atp_old_mth',    o_mth_set > 0 ? fmtINR(o_mth_set) : 'Nil');
+  setEl('atp_old_net',    fmtINR(o_net_mth));
+  setEl('atp_old_refund', o_refund > 0 ? fmtINR(o_refund) : 'Nil');
+
+  var ni = ['ns0','ns1','ns2','ns3','ns4','ns5','ns6'];
+  var i2;
+  for (i2 = 0; i2 < ni.length; i2++) {
+    setEl(ni[i2], nr.parts[i2] > 0 ? fmtINR(nr.parts[i2]) : '-');
+  }
+  var oi2 = ['os0','os1','os2','os3'];
+  for (i2 = 0; i2 < oi2.length; i2++) {
+    setEl(oi2[i2], or2.parts[i2] > 0 ? fmtINR(or2.parts[i2]) : '-');
+  }
+
+  /* Advance tax actually paid - tracker */
+  var paid_jun = parseINR(document.getElementById('paid_jun').value);
+  var paid_sep = parseINR(document.getElementById('paid_sep').value);
+  var paid_dec = parseINR(document.getElementById('paid_dec').value);
+  var paid_mar = parseINR(document.getElementById('paid_mar').value);
+  var paid_late_mar = parseINR(document.getElementById('paid_late_mar').value);
+  var paid_after_fy_amt = parseINR(document.getElementById('paid_after_fy_amt').value);
+  var paid_after_fy_date_str = document.getElementById('paid_after_fy_date').value;
+  var total_paid = paid_jun + paid_sep + paid_dec + paid_mar + paid_late_mar + paid_after_fy_amt;
+  setEl('total_paid_disp', fmtINR(total_paid));
+
+  /* Parse the late payment date (dd/mm/yyyy), if provided */
+  var paidAfterFYDate = null;
+  if (paid_after_fy_date_str) {
+    var lpParts = paid_after_fy_date_str.split('/');
+    if (lpParts.length === 3) {
+      var lpDD = parseInt(lpParts[0], 10);
+      var lpMM = parseInt(lpParts[1], 10);
+      var lpYYYY = parseInt(lpParts[2], 10);
+      if (lpDD && lpMM && lpYYYY && lpYYYY > 1900) {
+        paidAfterFYDate = new Date(lpYYYY, lpMM - 1, lpDD);
+      }
+    }
+  }
+
+  /* Store key figures globally so the interest calculator (Section I) can use them
+     without re-deriving everything. Keyed by regime. */
+  window.taxCalcState = {
+    n_total_tds: n_total_tds,
+    o_total_tds: o_total_tds,
+    ntot: ntot,
+    otot: otot,
+    paid_jun: paid_jun,
+    paid_sep: paid_sep,
+    paid_dec: paid_dec,
+    paid_mar: paid_mar,
+    paid_late_mar: paid_late_mar,
+    paid_after_fy_amt: paid_after_fy_amt,
+    paidAfterFYDate: paidAfterFYDate,
+    total_paid: total_paid
+  };
+
+  /* ---- SECTION 234B / 234C INTEREST CALCULATION (reusable per-regime) ---- */
+  /* Rule 119A: part of a month = full month; amounts rounded to nearest Rs.100. */
+  function roundTo100(n) {
+    return Math.round(n / 100) * 100;
+  }
+
+  function calcTaxPosition(assessed_tax, tds_credit) {
+    /* Payments considered "by 15 March" for the 44ADA single-instalment rule */
+    var paid_by_15mar = paid_jun + paid_sep + paid_dec + paid_mar;
+    var paid_by_31mar = paid_by_15mar + paid_late_mar;
+
+    var total_credit_31mar = tds_credit + paid_by_31mar;
+    var pct_covered = assessed_tax > 0 ? (total_credit_31mar / assessed_tax) * 100 : 100;
+
+    var b_threshold = assessed_tax * 0.90;
+    var b_interest = 0;
+    var b_end_date_note = '';
+
+    if (total_credit_31mar < b_threshold) {
+      var shortfall_after_31mar = assessed_tax - total_credit_31mar;
+      var endDate = new Date();
+      var stillOutstanding = true;
+
+      if (paidAfterFYDate && paid_after_fy_amt > 0) {
+        if (paid_after_fy_amt >= shortfall_after_31mar) {
+          endDate = paidAfterFYDate;
+          stillOutstanding = false;
+        } else {
+          endDate = new Date();
+          stillOutstanding = true;
+        }
+      }
+
+      var ayStart = new Date(endDate.getFullYear(), 3, 1);
+      if (endDate < ayStart) {
+        ayStart = new Date(endDate.getFullYear() - 1, 3, 1);
+      }
+      var monthsDiff = (endDate.getFullYear() - ayStart.getFullYear()) * 12 + (endDate.getMonth() - ayStart.getMonth());
+      if (endDate.getDate() > ayStart.getDate() || monthsDiff === 0) { monthsDiff += 1; }
+      if (monthsDiff < 1) { monthsDiff = 1; }
+      if (monthsDiff > 60) { monthsDiff = 60; }
+
+      var interestBase = roundTo100(shortfall_after_31mar);
+      if (interestBase < 0) { interestBase = 0; }
+
+      b_interest = interestBase * 0.01 * monthsDiff;
+
+      if (!stillOutstanding) {
+        b_end_date_note = ' (interest stops ' + paid_after_fy_date_str + ', per late payment logged)';
+      } else if (paidAfterFYDate && paid_after_fy_amt > 0 && paid_after_fy_amt < shortfall_after_31mar) {
+        b_end_date_note = ' (partial late payment logged \u2014 remainder still accruing as of today)';
+      }
+    }
+
+    var c_target = assessed_tax;
+    var c_covered_by_15mar = tds_credit + paid_by_15mar;
+    var c_interest = 0;
+    if (c_covered_by_15mar < c_target) {
+      var c_shortfall = roundTo100(c_target - c_covered_by_15mar);
+      if (c_shortfall < 0) { c_shortfall = 0; }
+      c_interest = c_shortfall * 0.01 * 1;
+    }
+
+    return {
+      assessed_tax: assessed_tax,
+      tds_credit: tds_credit,
+      total_credit_31mar: total_credit_31mar,
+      pct_covered: pct_covered,
+      b_interest: b_interest,
+      b_end_date_note: b_end_date_note,
+      c_interest: c_interest,
+      total_interest: b_interest + c_interest
+    };
+  }
+
+  var taxPositionNew = calcTaxPosition(ntot, n_total_tds);
+  var taxPositionOld = calcTaxPosition(otot, o_total_tds);
+  window.taxPositionNew = taxPositionNew;
+  window.taxPositionOld = taxPositionOld;
+
+  /* Display whichever regime is currently toggled (defaults to New) */
+  var selectedRegime = window.taxPositionSelectedRegime || 'new';
+  var tp = (selectedRegime === 'old') ? taxPositionOld : taxPositionNew;
+
+  setEl('int_assessed_tax', fmtINR(tp.assessed_tax));
+  setEl('int_tds_credit', fmtINR(tp.tds_credit));
+  setEl('int_paid_total', fmtINR(total_paid));
+  setEl('int_total_credit', fmtINR(tp.total_credit_31mar));
+  setEl('int_pct_covered', tp.pct_covered.toFixed(1) + '%');
+  setEl('int_234b_amt', tp.b_interest > 0 ? fmtINR(tp.b_interest) + tp.b_end_date_note : 'Nil');
+  setEl('int_234c_amt', tp.c_interest > 0 ? fmtINR(tp.c_interest) : 'Nil');
+  setEl('int_total', tp.total_interest > 0 ? fmtINR(tp.total_interest) : 'Nil \u2014 no interest exposure');
+
+  /* Balance advance tax still payable, shown right in the tracker section (2.3)
+     so the user doesn't need to scroll to 3.4 to see what's left owing.
+     Uses the same regime toggle selection as Section 3.4. */
+  var balancePayable = tp.assessed_tax - tp.total_credit_31mar;
+  if (balancePayable < 0) { balancePayable = 0; }
+  setEl('dd_balance_payable_disp', balancePayable > 0 ? fmtINR(balancePayable) : 'Nil \u2014 fully covered');
+  setEl('dd_balance_payable_sub', 'Against ' + (selectedRegime === 'old' ? 'Old' : 'New') + ' Regime total tax, after TDS + payments above');
+
+  setEl('tp_regime_label_1', 'Total tax liability \u2014 ' + (selectedRegime === 'old' ? 'Old Regime' : 'New Regime'));
+
+  var todayDisp = new Date();
+  var todayStr = ('0' + todayDisp.getDate()).slice(-2) + '/' + ('0' + (todayDisp.getMonth()+1)).slice(-2) + '/' + todayDisp.getFullYear();
+  setEl('int_today_date', todayStr);
+
+  /* ---- ITR FORM INDICATOR ---- */
+  /* Logic (AY 2026-27):
+     - Any 44ADA/business income -> ITR-4 (Sugam) if within limits, else ITR-3
+     - ITR-4 disqualifiers: ANY STCG (including equity, Sec 111A), LTCG-112A > Rs.1.25L,
+       any non-112A capital gains (property/gold/debt/slab-rate gains),
+       more than 2 house properties (we only track one rental figure so skip that check),
+       foreign assets/income (not tracked here)
+     - No business income:
+         - Any STCG, LTCG over Rs.1.25L, non-equity capital gains, or income > 50L -> ITR-2
+         - Otherwise simple salary/rental/interest (equity LTCG within Rs.1.25L allowed) -> ITR-1
+  */
+  var hasBusinessIncome = gross > 0; /* 44ADA consultancy */
+  var hasEquitySTCG = stcg_equity > 0;
+  var hasNonEquityCapGains = (cg_slab > 0) || (ltcg_other > 0) || (prop_gain > 0);
+  var ltcgEquityOverLimit = ltcg_equity > 125000;
+  var hasAnyCapGains = hasEquitySTCG || (ltcg_equity > 0) || hasNonEquityCapGains;
+  var totalIncomeApprox = totalCash; /* approximate total for the 50L ITR-1 threshold check */
+  var hasAnyIncomeEntered = salary > 0 || gross > 0 || propPosition.hasProperties || other > 0 || hasAnyCapGains;
+
+  var itrForm = 'ITR-1';
+  var itrReason = '';
+
+  if (!hasAnyIncomeEntered) {
+    itrForm = 'ITR-?';
+    itrReason = 'Enter your income details above and tap Compute \u2014 the likely ITR form will be worked out once there\u2019s something to base it on.';
+  } else if (hasBusinessIncome) {
+    /* 44ADA present */
+    if (hasEquitySTCG || hasNonEquityCapGains || ltcgEquityOverLimit) {
+      itrForm = 'ITR-3';
+      if (hasEquitySTCG) {
+        itrReason = 'You have 44ADA business income together with short-term capital gains (even equity STCG disqualifies ITR-4/ITR-1 entirely under Sec 111A) \u2014 ITR-3 applies.';
+      } else {
+        itrReason = 'You have 44ADA business income together with capital gains outside ITR-4\u2019s simplified scope (property/gold/debt-MF/slab-rate gains, or equity LTCG above Rs.1.25L). ITR-4 cannot be used in this case.';
+      }
+    } else {
+      itrForm = 'ITR-4';
+      itrReason = 'Presumptive income under Sec 44ADA, optionally with salary, rental (one property), and equity LTCG within Rs.1.25L (no STCG) \u2014 fits ITR-4 (Sugam).';
+    }
+  } else {
+    if (hasEquitySTCG || hasNonEquityCapGains || ltcgEquityOverLimit) {
+      itrForm = 'ITR-2';
+      if (hasEquitySTCG) {
+        itrReason = 'You have short-term capital gains (even equity STCG disqualifies ITR-1 entirely under Sec 111A) \u2014 ITR-2 applies.';
+      } else {
+        itrReason = 'You have capital gains beyond the small equity-LTCG allowance that ITR-1 permits (max Rs.1.25L, equity-only, no other capital gains, no STCG) \u2014 ITR-2 applies.';
+      }
+    } else if (totalIncomeApprox > 5000000) {
+      itrForm = 'ITR-2';
+      itrReason = 'Total income exceeds Rs.50L \u2014 ITR-1 is not available above this threshold, even without capital gains.';
+    } else {
+      itrForm = 'ITR-1';
+      itrReason = 'Salary/pension, one house property, other sources, and equity LTCG (if any) within Rs.1.25L, no STCG \u2014 fits the simplified ITR-1 (Sahaj).';
+    }
+  }
+
+  setEl('itr_form_badge', itrForm);
+  setEl('itr_form_reason', itrReason);
+
+  /* Re-format all input fields with Indian commas after calc */
+  var inputIds = ['salary','consultancy','other','stcg_equity','ltcg_equity','cg_slab','ltcg_other','prop_sale','prop_cost','ded80c','ded80d_self','ded80d_mother','ded80ccd1b','ded80ccd2','ded80tta','paid_jun','paid_sep','paid_dec','paid_mar','paid_late_mar','paid_after_fy_amt','prop1_rent','prop1_interest','prop1_precon_amt','hra_rent_paid','hra_received','hra_basic_da','hra_80gg_rent_paid'];
+  for (i2 = 0; i2 < inputIds.length; i2++) {
+    fmtInput(inputIds[i2]);
+  }
+
+  /* Button state 3: Computed (only if this was a real, user-triggered compute) */
+  window.hasComputedOnce = true;
+  setButtonState('computed');
+}
+
+/* ---- WIRE UP EVENTS ---- */
+/* ---- COMPUTE BUTTON STATE MACHINE ----
+   State 1 (initial):  grey "Compute Tax", helper prompts to enter details
+   State 2 (dirty, never computed): active "Compute Tax", helper prompts to check entries
+   State 3 (computed):  grey "Computed", helper says view results / amend to recompute
+   State 4 (dirty after a prior compute): active "Recompute", helper says tap to see revised numbers
+*/
+window.hasComputedOnce = false;
+
+function anyTrackedInputHasValue() {
+  var ids = ['salary','consultancy','other','stcg_equity','ltcg_equity','cg_slab','ltcg_other',
+    'prop_sale','prop_cost','prop_purchase_date','ded80c','ded80d_self','ded80d_mother',
+    'paid_jun','paid_sep','paid_dec','paid_mar','paid_late_mar','paid_after_fy_amt','paid_after_fy_date'];
+  for (var i = 0; i < ids.length; i++) {
+    var el = document.getElementById(ids[i]);
+    if (!el) { continue; }
+    var v = el.value;
+    if (!v) { continue; }
+    if (ids[i] === 'prop_purchase_date' || ids[i] === 'paid_after_fy_date') {
+      if (v.trim() !== '') { return true; }
+      continue;
+    }
+    var n = parseINR(v);
+    if (n !== 0) { return true; }
+  }
+  return false;
+}
+
+function setButtonState(state) {
+  var btnEl = document.getElementById('calcbtn');
+  var helperEl = document.getElementById('calcbtn_helper');
+  if (!btnEl || !helperEl) { return; }
+
+  if (state === 'initial') {
+    btnEl.textContent = 'Compute Tax \u2192';
+    btnEl.classList.add('dulled');
+    helperEl.textContent = 'Enter your details above, then tap Compute';
+    helperEl.classList.remove('active');
+  } else if (state === 'dirty-fresh') {
+    btnEl.textContent = 'Compute Tax \u2192';
+    btnEl.classList.remove('dulled');
+    helperEl.textContent = 'Check that you\u2019ve filled in all your info, then tap Compute';
+    helperEl.classList.add('active');
+  } else if (state === 'computed') {
+    btnEl.textContent = 'Computed \u2713';
+    btnEl.classList.add('dulled');
+    helperEl.textContent = 'View your results below, or amend your entries to recompute';
+    helperEl.classList.remove('active');
+  } else if (state === 'dirty-after-compute') {
+    btnEl.textContent = 'Recompute \u2192';
+    btnEl.classList.remove('dulled');
+    helperEl.textContent = 'Tap to view your revised computation';
+    helperEl.classList.add('active');
+  }
+}
+
+/* Updates visibility of the TDS section's employer/client rows live, as the
+   user types salary/consultancy figures - independent of a full doCalc(),
+   so rows appear immediately rather than only after pressing Compute. */
+function updateTDSRowVisibility() {
+  var salaryVal = parseINR(document.getElementById('salary').value);
+  var grossVal = parseINR(document.getElementById('consultancy').value);
+
+  var salAddRow = document.getElementById('salary_add_row');
+  var consultAddRow = document.getElementById('consultancy_add_row');
+  var tdsEmptyHint = document.getElementById('tds_empty_hint');
+  if (tdsEmptyHint) { tdsEmptyHint.style.display = (salaryVal > 0 || grossVal > 0) ? 'none' : 'flex'; }
+  if (salAddRow) { salAddRow.style.display = salaryVal > 0 ? 'flex' : 'none'; }
+  if (consultAddRow) { consultAddRow.style.display = grossVal > 0 ? 'flex' : 'none'; }
+
+  for (var si = 1; si <= salarySourceCount; si++) {
+    var srow = document.getElementById('salary_source_row_' + si);
+    if (srow) { srow.style.display = salaryVal > 0 ? 'flex' : 'none'; }
+  }
+  for (var ci = 1; ci <= consultSourceCount; ci++) {
+    var crow = document.getElementById('consult_source_row_' + ci);
+    if (crow) { crow.style.display = grossVal > 0 ? 'flex' : 'none'; }
+  }
+}
+
+/* Live over-limit warning for Old Regime deduction fields - fires on every
+   keystroke, independent of a full doCalc(), so the warning appears the
+   instant someone types more than the statutory max. */
+function updateDeductionWarnings() {
+  function toggleWarnRowLive(inputId, rowId, max) {
+    var inputEl = document.getElementById(inputId);
+    var row = document.getElementById(rowId);
+    if (!inputEl || !row) { return; }
+    var v = parseINR(inputEl.value);
+    row.style.display = v > max ? 'flex' : 'none';
+  }
+  toggleWarnRowLive('ded80c', 'ded80c_warn_row', 150000);
+  toggleWarnRowLive('ded80d_self', 'ded80d_self_warn_row', 25000);
+  toggleWarnRowLive('ded80d_mother', 'ded80d_mother_warn_row', 50000);
+}
+
+function onAnyInputChanged() {
+  updateTDSRowVisibility();
+  updateDeductionWarnings();
+  if (window.hasComputedOnce) {
+    setButtonState('dirty-after-compute');
+  } else {
+    setButtonState('dirty-fresh');
+  }
+}
+
+/* ---- MULTI-SOURCE TDS TRACKING ----
+   Each salary employer / consultancy client gets its own row: name, monthly TDS.
+   Total income still comes from the single Section A salary/consultancy fields
+   (splitting income across employers doesn't change total tax) - these rows only
+   let TDS be tracked per source and summed, since different employers/clients
+   often deduct inconsistently. */
+var salarySourceCount = 0;
+var consultSourceCount = 0;
+
+function addSalarySource() {
+  salarySourceCount++;
+  var idx = salarySourceCount;
+  var list = document.getElementById('salary_sources_list');
+  if (!list) { return; }
+  var row = document.createElement('div');
+  row.className = 'row';
+  row.id = 'salary_source_row_' + idx;
+  row.innerHTML =
+    '<div class="lbl">' +
+      '<input type="text" id="salary_src_name_' + idx + '" placeholder="Employer ' + idx + ' name (optional)" ' +
+        'style="border:none;border-bottom:1px solid #ccc5b8;background:none;font-size:12px;color:#1a1a1a;width:100%;margin-bottom:4px;padding:2px 0">' +
+      '<div class="sub">Monthly TDS deducted (Sec 192)</div>' +
+    '</div>' +
+    '<div class="ibox"><span>Rs.</span><input type="text" id="salary_src_tds_' + idx + '" value="0" inputmode="numeric"></div>' +
+    (idx > 1 ? '<button type="button" id="salary_src_remove_' + idx + '" style="margin-left:6px;border:none;background:none;color:#c0392b;font-size:16px;cursor:pointer;flex-shrink:0">&times;</button>' : '');
+  list.appendChild(row);
+
+  var tdsEl = document.getElementById('salary_src_tds_' + idx);
+  tdsEl.addEventListener('focus', function() { stripInput('salary_src_tds_' + idx); });
+  tdsEl.addEventListener('blur', function() { fmtInput('salary_src_tds_' + idx); });
+  tdsEl.addEventListener('input', onAnyInputChanged);
+
+  var nameEl = document.getElementById('salary_src_name_' + idx);
+  nameEl.addEventListener('input', onAnyInputChanged);
+
+  if (idx > 1) {
+    var removeBtn = document.getElementById('salary_src_remove_' + idx);
+    removeBtn.addEventListener('click', function() {
+      list.removeChild(row);
+      onAnyInputChanged();
+    });
+  }
+}
+
+function addConsultSource() {
+  consultSourceCount++;
+  var idx = consultSourceCount;
+  var list = document.getElementById('consultancy_sources_list');
+  if (!list) { return; }
+  var row = document.createElement('div');
+  row.className = 'row';
+  row.id = 'consult_source_row_' + idx;
+  row.innerHTML =
+    '<div class="lbl">' +
+      '<input type="text" id="consult_src_name_' + idx + '" placeholder="Client ' + idx + ' name (optional)" ' +
+        'style="border:none;border-bottom:1px solid #ccc5b8;background:none;font-size:12px;color:#1a1a1a;width:100%;margin-bottom:4px;padding:2px 0">' +
+      '<div class="sub">Monthly TDS deducted (Sec 194J)</div>' +
+    '</div>' +
+    '<div class="ibox"><span>Rs.</span><input type="text" id="consult_src_tds_' + idx + '" value="0" inputmode="numeric"></div>' +
+    (idx > 1 ? '<button type="button" id="consult_src_remove_' + idx + '" style="margin-left:6px;border:none;background:none;color:#c0392b;font-size:16px;cursor:pointer;flex-shrink:0">&times;</button>' : '');
+  list.appendChild(row);
+
+  var tdsEl = document.getElementById('consult_src_tds_' + idx);
+  tdsEl.addEventListener('focus', function() { stripInput('consult_src_tds_' + idx); });
+  tdsEl.addEventListener('blur', function() { fmtInput('consult_src_tds_' + idx); });
+  tdsEl.addEventListener('input', onAnyInputChanged);
+
+  var nameEl = document.getElementById('consult_src_name_' + idx);
+  nameEl.addEventListener('input', onAnyInputChanged);
+
+  if (idx > 1) {
+    var removeBtn = document.getElementById('consult_src_remove_' + idx);
+    removeBtn.addEventListener('click', function() {
+      list.removeChild(row);
+      onAnyInputChanged();
+    });
+  }
+}
+
+/* Sum TDS across all active salary source rows currently in the DOM */
+function sumSalarySourceTDS() {
+  var total = 0;
+  var found = false;
+  for (var i = 1; i <= salarySourceCount; i++) {
+    var el = document.getElementById('salary_src_tds_' + i);
+    if (el) { total += parseINR(el.value); found = true; }
+  }
+  return { total: total, hasRows: found };
+}
+
+/* Sum TDS across all active consultancy source rows currently in the DOM */
+function sumConsultSourceTDS() {
+  var total = 0;
+  var found = false;
+  for (var i = 1; i <= consultSourceCount; i++) {
+    var el = document.getElementById('consult_src_tds_' + i);
+    if (el) { total += parseINR(el.value); found = true; }
+  }
+  return { total: total, hasRows: found };
+}
+
+/* ---- MULTI-PROPERTY HOME LOAN & RENTAL INCOME ----
+   Each property gets: name, self-occupied yes/no toggle, rent (if let-out),
+   interest paid. Rules applied (FY 2025-26):
+   - Up to 2 properties may be marked self-occupied; any beyond that are
+     automatically treated as "deemed let-out" (Sec 23), taxed on notional
+     rent even if not actually rented - the tool asks for an estimated fair
+     rental value in that case, flagged clearly as an estimate.
+   - Self-occupied: combined interest deduction capped at Rs.2,00,000 total
+     across all self-occupied properties, Old Regime only. [Sec 24(b)]
+   - Let-out / deemed let-out: interest fully deductible with no cap, netted
+     against that property's own rental income (after 30% standard deduction).
+   - If the combined let-out position is a loss, only Rs.2,00,000 of that
+     loss can be set off against other income in the current year; any
+     excess carries forward (not modelled - flagged as a CA-review item).
+   - Pre-construction interest is accumulated and claimed in 5 equal yearly
+     instalments starting the year construction completes. */
+var propertyCount = 0;
+
+function addPropertyRow() {
+  propertyCount++;
+  var idx = propertyCount;
+  var list = document.getElementById('properties_list');
+  if (!list) { return; }
+  var wrap = document.createElement('div');
+  wrap.id = 'property_wrap_' + idx;
+  wrap.innerHTML =
+    '<div class="row" style="background:#fbf8f2">' +
+      '<div class="lbl">' +
+        '<input type="text" id="prop_name_' + idx + '" placeholder="Property ' + idx + ' name (optional)" ' +
+          'style="border:none;border-bottom:1px solid #ccc5b8;background:none;font-size:12px;color:#1a1a1a;width:100%;margin-bottom:4px;padding:2px 0">' +
+        '<div class="sub">Mark whether you live in this property</div>' +
+      '</div>' +
+      (idx > 1 ? '<button type="button" id="prop_remove_' + idx + '" style="margin-left:6px;border:none;background:none;color:#c0392b;font-size:16px;cursor:pointer;flex-shrink:0">&times;</button>' : '') +
+    '</div>' +
+    '<div class="row" style="justify-content:center;gap:6px;padding:6px 14px;background:#fbf8f2">' +
+      '<button type="button" id="prop_occ_' + idx + '" class="regime-toggle-btn" style="font-size:11px;padding:5px 12px">Self-Occupied</button>' +
+      '<button type="button" id="prop_let_' + idx + '" class="regime-toggle-btn" style="font-size:11px;padding:5px 12px">Let-Out</button>' +
+    '</div>' +
+    '<div class="toggle-unanswered-hint" id="prop_occ_hint_' + idx + '">Please choose one</div>' +
+    '<div class="row" id="prop_rent_row_' + idx + '" style="display:none;background:#fbf8f2">' +
+      '<div class="lbl">Annual Rental Income<div class="sub">Gross, before 30% deduction</div></div>' +
+      '<div class="ibox"><span>Rs.</span><input type="text" id="prop_rent_' + idx + '" value="0" inputmode="numeric"></div>' +
+    '</div>' +
+    '<div class="row" id="prop_rent_projector_row_' + idx + '" style="display:none;padding-top:0;padding-bottom:10px;background:#fbf8f2">' +
+      '<div class="lbl" style="font-size:11px;color:#7a7060">' +
+        'Part-year? Monthly rate' +
+        '<input type="text" id="prop_rent_monthly_rate_' + idx + '" value="" placeholder="e.g. 40,000" inputmode="numeric" style="width:90px;border:none;border-bottom:1px solid #ccc5b8;background:none;font-size:11px;color:#1d4e5e;text-align:right;margin:0 4px">' +
+        '&times; months active' +
+        '<input type="text" id="prop_rent_months_' + idx + '" value="" placeholder="12" inputmode="numeric" style="width:36px;border:none;border-bottom:1px solid #ccc5b8;background:none;font-size:11px;color:#1d4e5e;text-align:center;margin:0 4px">' +
+        '<button type="button" id="prop_rent_project_btn_' + idx + '" style="font-size:16px;font-weight:700;padding:0 2px;border:none;background:none;color:#1d4e5e;cursor:pointer;flex-shrink:0;line-height:1" title="Fill annual amount from this rate">&#8626;</button>' +
+      '</div>' +
+    '</div>' +
+    '<div class="row" style="background:#fbf8f2">' +
+      '<div class="lbl" style="font-size:11.5px;color:#1d4e5e;line-height:1.5">Do you have an <b>active</b> home loan on this property? (Not one already paid off &mdash; only a loan you\u2019re still repaying.)</div>' +
+    '</div>' +
+    '<div class="row" style="justify-content:center;gap:6px;padding:6px 14px;background:#fbf8f2">' +
+      '<button type="button" id="prop_loan_yes_' + idx + '" class="regime-toggle-btn" style="font-size:11px;padding:5px 12px">Yes</button>' +
+      '<button type="button" id="prop_loan_no_' + idx + '" class="regime-toggle-btn" style="font-size:11px;padding:5px 12px">No</button>' +
+    '</div>' +
+    '<div class="toggle-unanswered-hint" id="prop_loan_hint_' + idx + '">Please choose one</div>' +
+    '<div class="row" id="prop_interest_row_' + idx + '" style="display:none;background:#fbf8f2">' +
+      '<div class="lbl">Annual Home Loan Interest Paid<div class="sub" id="prop_interest_sub_' + idx + '">Depends on Self-Occupied/Let-Out above</div></div>' +
+      '<div class="ibox"><span>Rs.</span><input type="text" id="prop_interest_' + idx + '" value="0" inputmode="numeric"></div>' +
+    '</div>' +
+    '<div class="row" id="prop_deemed_row_' + idx + '" style="display:none;background:#fff3f0">' +
+      '<div class="lbl" style="font-size:11px;color:#8a2f22;line-height:1.5">This is your 3rd+ self-occupied choice, so it is automatically "deemed let-out" and taxed on notional rent even if not actually rented. Enter your best estimate of the fair annual rental value below.</div>' +
+    '</div>';
+  list.appendChild(wrap);
+
+  var occBtn = document.getElementById('prop_occ_' + idx);
+  var letBtn = document.getElementById('prop_let_' + idx);
+  var rentRow = document.getElementById('prop_rent_row_' + idx);
+  var rentProjectorRow = document.getElementById('prop_rent_projector_row_' + idx);
+  var interestSub = document.getElementById('prop_interest_sub_' + idx);
+  var occHint = document.getElementById('prop_occ_hint_' + idx);
+
+  function setOccupancy(isOcc) {
+    if (occHint) { occHint.style.display = 'none'; }
+
+    if (isOcc) {
+      occBtn.classList.add('active-new');
+      letBtn.classList.remove('active-new');
+      rentRow.style.display = 'none';
+      if (rentProjectorRow) { rentProjectorRow.style.display = 'none'; }
+      interestSub.textContent = 'Counts towards the combined Rs.2,00,000 self-occupied cap \u2014 Old Regime only';
+    } else {
+      letBtn.classList.add('active-new');
+      occBtn.classList.remove('active-new');
+      rentRow.style.display = 'flex';
+      if (rentProjectorRow) { rentProjectorRow.style.display = 'flex'; }
+      interestSub.textContent = 'No cap \u2014 netted against this property\u2019s rental income';
+    }
+    onAnyInputChanged();
+  }
+  occBtn.addEventListener('click', function() { setOccupancy(true); });
+  letBtn.addEventListener('click', function() { setOccupancy(false); });
+
+  if (window.wireProjectorFn) {
+    window.wireProjectorFn('prop_rent_monthly_rate_' + idx, 'prop_rent_months_' + idx, 'prop_rent_' + idx, 'prop_rent_project_btn_' + idx);
+  }
+
+  var loanYesBtn = document.getElementById('prop_loan_yes_' + idx);
+  var loanNoBtn = document.getElementById('prop_loan_no_' + idx);
+  var interestRow = document.getElementById('prop_interest_row_' + idx);
+  var loanHint = document.getElementById('prop_loan_hint_' + idx);
+  function setHasLoan(hasLoan) {
+    if (loanHint) { loanHint.style.display = 'none'; }
+
+    if (hasLoan) {
+      loanYesBtn.classList.add('active-new');
+      loanNoBtn.classList.remove('active-new');
+      if (interestRow) { interestRow.style.display = 'flex'; }
+    } else {
+      loanNoBtn.classList.add('active-new');
+      loanYesBtn.classList.remove('active-new');
+      if (interestRow) { interestRow.style.display = 'none'; }
+      var intEl = document.getElementById('prop_interest_' + idx);
+      if (intEl) { intEl.value = '0'; }
+    }
+    onAnyInputChanged();
+  }
+  loanYesBtn.addEventListener('click', function() { setHasLoan(true); });
+  loanNoBtn.addEventListener('click', function() { setHasLoan(false); });
+
+  var rentEl = document.getElementById('prop_rent_' + idx);
+  rentEl.addEventListener('focus', function() { stripInput('prop_rent_' + idx); });
+  rentEl.addEventListener('blur', function() { fmtInput('prop_rent_' + idx); });
+  rentEl.addEventListener('input', onAnyInputChanged);
+
+  var interestEl = document.getElementById('prop_interest_' + idx);
+  interestEl.addEventListener('focus', function() { stripInput('prop_interest_' + idx); });
+  interestEl.addEventListener('blur', function() { fmtInput('prop_interest_' + idx); });
+  interestEl.addEventListener('input', onAnyInputChanged);
+
+  var nameEl = document.getElementById('prop_name_' + idx);
+  nameEl.addEventListener('input', onAnyInputChanged);
+
+  if (idx > 1) {
+    var removeBtn = document.getElementById('prop_remove_' + idx);
+    removeBtn.addEventListener('click', function() {
+      list.removeChild(wrap);
+      onAnyInputChanged();
+    });
+  }
+}
+
+/* Reads all active property rows and computes the combined position.
+   Returns totals needed for the tax calculation plus display strings. */
+function calcPropertyPosition() {
+  var properties = [];
+  var anyUnanswered = false;
+  for (var i = 1; i <= propertyCount; i++) {
+    var wrap = document.getElementById('property_wrap_' + i);
+    if (!wrap) { continue; }
+    var occBtn = document.getElementById('prop_occ_' + i);
+    var letBtn = document.getElementById('prop_let_' + i);
+    var occAnswered = occBtn && (occBtn.classList.contains('active-new') || (letBtn && letBtn.classList.contains('active-new')));
+    var isOcc = occBtn && occBtn.classList.contains('active-new');
+    var loanYesBtn = document.getElementById('prop_loan_yes_' + i);
+    var hasLoan = loanYesBtn && loanYesBtn.classList.contains('active-new');
+    var rent = parseINR((document.getElementById('prop_rent_' + i) || {}).value || '0');
+    var interest = hasLoan ? parseINR((document.getElementById('prop_interest_' + i) || {}).value || '0') : 0;
+    if (!occAnswered) { anyUnanswered = true; }
+    properties.push({ idx: i, isOcc: isOcc, occAnswered: occAnswered, rent: rent, interest: interest });
+  }
+
+  /* Only the first 2 self-occupied entries (in order added) get true
+     self-occupied treatment; any beyond that become deemed let-out */
+  var occSeen = 0;
+  var selfOccInterestTotal = 0;
+  var letOutNetTotal = 0;
+  var letOutCount = 0;
+  var deemedCount = 0;
+
+  properties.forEach(function(prop) {
+    var deemedRow = document.getElementById('prop_deemed_row_' + prop.idx);
+    if (!prop.occAnswered) {
+      /* Genuinely unanswered - contribute nothing rather than guessing
+         either Self-Occupied or Let-Out */
+      if (deemedRow) { deemedRow.style.display = 'none'; }
+      return;
+    }
+    if (prop.isOcc) {
+      occSeen++;
+      if (occSeen <= 2) {
+        selfOccInterestTotal += prop.interest;
+        if (deemedRow) { deemedRow.style.display = 'none'; }
+      } else {
+        /* 3rd+ self-occupied choice becomes deemed let-out */
+        deemedCount++;
+        if (deemedRow) { deemedRow.style.display = 'flex'; }
+        var netAnnual = prop.rent * 0.7;
+        letOutNetTotal += (netAnnual - prop.interest);
+        letOutCount++;
+      }
+    } else {
+      if (deemedRow) { deemedRow.style.display = 'none'; }
+      var netAnnualLO = prop.rent * 0.7;
+      letOutNetTotal += (netAnnualLO - prop.interest);
+      letOutCount++;
+    }
+  });
+
+  var selfOccInterestCapped = Math.min(selfOccInterestTotal, 200000);
+  var selfOccOverCap = selfOccInterestTotal > 200000;
+
+  /* Rs.2L cap on setting off a house-property loss against other income */
+  var letOutLossCapped = letOutNetTotal;
+  var letOutLossOverCap = false;
+  if (letOutNetTotal < -200000) {
+    letOutLossCapped = -200000;
+    letOutLossOverCap = true;
+  }
+
+  return {
+    hasProperties: properties.length > 0,
+    anyUnanswered: anyUnanswered,
+    selfOccInterestTotal: selfOccInterestTotal,
+    selfOccInterestCapped: selfOccInterestCapped,
+    selfOccOverCap: selfOccOverCap,
+    letOutNetTotal: letOutNetTotal,
+    letOutLossCapped: letOutLossCapped,
+    letOutLossOverCap: letOutLossOverCap,
+    letOutCount: letOutCount,
+    deemedCount: deemedCount,
+    occSeen: occSeen
+  };
+}
+
+/* Renders the "Combined Property Position" breakdown and any CA-review
+   caveats, so the set-off between self-occupied and let-out/deemed
+   properties is always visible, never silent. */
+function updatePropertySummaryDisplay(propPosition, homeLoanInterestDeduction, precon_instalment) {
+  var summaryRow = document.getElementById('prop_summary_row');
+  var summaryLines = document.getElementById('prop_summary_lines');
+  var caveatRow = document.getElementById('prop_caveat_row');
+  var caveatText = document.getElementById('prop_caveat_text');
+  if (!summaryRow || !summaryLines) { return; }
+
+  if (!propPosition.hasProperties && !propPosition.occupancyUnanswered && !propPosition.anyUnanswered) {
+    summaryRow.style.display = 'none';
+    if (caveatRow) { caveatRow.style.display = 'none'; }
+    return;
+  }
+
+  var lines = [];
+  if (propPosition.selfOccInterestTotal > 0 || precon_instalment > 0) {
+    lines.push('Self-occupied home loan interest: ' + fmtINR(propPosition.selfOccInterestTotal + precon_instalment) +
+      (precon_instalment > 0 ? ' (incl. ' + fmtINR(precon_instalment) + ' pre-construction instalment)' : ''));
+    lines.push('Capped at Rs.2,00,000 \u2192 deductible: ' + fmtINR(homeLoanInterestDeduction) + ' (Old Regime only)');
+  }
+  if (propPosition.letOutCount > 0) {
+    lines.push((propPosition.letOutCount > 1 ? propPosition.letOutCount + ' let-out/deemed properties combined' : 'Let-out property') +
+      ' \u2014 net rent after 30% standard deduction and interest: ' + fmtINR(propPosition.letOutNetTotal));
+    if (propPosition.letOutLossOverCap) {
+      lines.push('Loss capped at Rs.2,00,000 for set-off this year \u2192 counted: ' + fmtINR(propPosition.letOutLossCapped) +
+        ' (excess carries forward \u2014 not tracked here)');
+    }
+  }
+  if (propPosition.occupancyUnanswered || propPosition.anyUnanswered) {
+    lines.push('\u26A0 One or more properties have not had Self-Occupied/Let-Out answered yet \u2014 they are NOT counted in your tax until you choose.');
+  }
+  summaryLines.innerHTML = lines.length > 0
+    ? lines.map(function(l) { return '<div>' + l + '</div>'; }).join('')
+    : '<div>No property income counted yet \u2014 answer Self-Occupied/Let-Out above.</div>';
+  summaryRow.style.display = 'flex';
+
+  /* CA-review caveats: genuinely uncertain areas, not silently assumed */
+  var caveats = [];
+  if (propPosition.selfOccOverCap) {
+    caveats.push('Some sources cite a lower Rs.30,000 cap (rather than Rs.2,00,000) for loans taken for repair/reconstruction, versus purchase/construction \u2014 this tool assumes the higher Rs.2,00,000 cap applies. Please confirm which applies to your specific loan.');
+  }
+  if (propPosition.deemedCount > 0) {
+    caveats.push('Deemed let-out valuation (for a 3rd+ self-occupied property) should technically use the higher of municipal value, fair rent, or standard rent \u2014 this tool uses your entered estimate directly. Please have this reviewed.');
+  }
+  if (propPosition.letOutLossOverCap) {
+    caveats.push('Any house-property loss beyond Rs.2,00,000 carries forward for set-off in future years (up to 8 years) \u2014 this carry-forward is not tracked by this tool.');
+  }
+  if (caveatRow && caveatText) {
+    if (caveats.length > 0) {
+      caveatText.textContent = caveats.join(' ');
+      caveatRow.style.display = 'flex';
+    } else {
+      caveatRow.style.display = 'none';
+    }
+  }
+}
+
+function wireInputs() {
+  var inputIds = ['salary','consultancy','other','stcg_equity','ltcg_equity','cg_slab','ltcg_other','prop_sale','prop_cost','ded80c','ded80d_self','ded80d_mother','ded80ccd1b','ded80ccd2','ded80tta','paid_jun','paid_sep','paid_dec','paid_mar','paid_late_mar','paid_after_fy_amt',
+    'prop1_rent','prop1_interest','prop1_precon_amt','prop1_precon_year',
+    'hra_rent_paid','hra_received','hra_basic_da','hra_80gg_rent_paid'];
+  var i;
+
+  for (i = 0; i < inputIds.length; i++) {
+    (function(id) {
+      var el = document.getElementById(id);
+      if (!el) { return; }
+      el.addEventListener('focus', function() { stripInput(id); });
+      el.addEventListener('blur',  function() { fmtInput(id);  });
+      el.addEventListener('input', onAnyInputChanged);
+    })(inputIds[i]);
+  }
+
+  /* ---- HRA / SECTION 80GG (Rent You Pay) ---- */
+  var hraPaysRentYesBtn = document.getElementById('hra_pays_rent_yes_btn');
+  var hraPaysRentNoBtn = document.getElementById('hra_pays_rent_no_btn');
+  var hraBlock = document.getElementById('hra_block');
+  var hraPaysRentHint = document.getElementById('hra_pays_rent_hint');
+  function setHraPaysRent(paysRent) {
+    window.hraPaysRent = paysRent;
+    if (hraPaysRentHint) { hraPaysRentHint.style.display = 'none'; }
+    if (paysRent) {
+      if (hraPaysRentYesBtn) { hraPaysRentYesBtn.classList.add('active-new'); }
+      if (hraPaysRentNoBtn) { hraPaysRentNoBtn.classList.remove('active-new'); }
+      if (hraBlock) { hraBlock.style.display = 'block'; }
+    } else {
+      if (hraPaysRentNoBtn) { hraPaysRentNoBtn.classList.add('active-new'); }
+      if (hraPaysRentYesBtn) { hraPaysRentYesBtn.classList.remove('active-new'); }
+      if (hraBlock) { hraBlock.style.display = 'none'; }
+    }
+    onAnyInputChanged();
+  }
+  if (hraPaysRentYesBtn) { hraPaysRentYesBtn.addEventListener('click', function() { setHraPaysRent(true); }); }
+  if (hraPaysRentNoBtn) { hraPaysRentNoBtn.addEventListener('click', function() { setHraPaysRent(false); }); }
+  window.hraPaysRent = null; /* genuinely unanswered until the user taps Yes or No */
+
+  var hraHasHraYesBtn = document.getElementById('hra_has_hra_yes_btn');
+  var hraHasHraNoBtn = document.getElementById('hra_has_hra_no_btn');
+  var hraYesFields = document.getElementById('hra_yes_fields');
+  var hraNoFields = document.getElementById('hra_no_fields');
+  var hraHasHraHint = document.getElementById('hra_has_hra_hint');
+  function setHasHra(hasHra) {
+    window.hraHasHra = hasHra;
+    if (hraHasHraHint) { hraHasHraHint.style.display = 'none'; }
+    if (hasHra) {
+      if (hraHasHraYesBtn) { hraHasHraYesBtn.classList.add('active-new'); }
+      if (hraHasHraNoBtn) { hraHasHraNoBtn.classList.remove('active-new'); }
+      if (hraYesFields) { hraYesFields.style.display = 'block'; }
+      if (hraNoFields) { hraNoFields.style.display = 'none'; }
+    } else {
+      if (hraHasHraNoBtn) { hraHasHraNoBtn.classList.add('active-new'); }
+      if (hraHasHraYesBtn) { hraHasHraYesBtn.classList.remove('active-new'); }
+      if (hraYesFields) { hraYesFields.style.display = 'none'; }
+      if (hraNoFields) { hraNoFields.style.display = 'block'; }
+    }
+    onAnyInputChanged();
+  }
+  if (hraHasHraYesBtn) { hraHasHraYesBtn.addEventListener('click', function() { setHasHra(true); }); }
+  if (hraHasHraNoBtn) { hraHasHraNoBtn.addEventListener('click', function() { setHasHra(false); }); }
+  window.hraHasHra = null;
+
+  var hraMetroBtn = document.getElementById('hra_metro_btn');
+  var hraNonMetroBtn = document.getElementById('hra_nonmetro_btn');
+  var hraMetroHint = document.getElementById('hra_metro_hint');
+  function setHraMetro(isMetro) {
+    window.hraIsMetro = isMetro;
+    if (hraMetroHint) { hraMetroHint.style.display = 'none'; }
+    if (isMetro) {
+      if (hraMetroBtn) { hraMetroBtn.classList.add('active-new'); }
+      if (hraNonMetroBtn) { hraNonMetroBtn.classList.remove('active-new'); }
+    } else {
+      if (hraNonMetroBtn) { hraNonMetroBtn.classList.add('active-new'); }
+      if (hraMetroBtn) { hraMetroBtn.classList.remove('active-new'); }
+    }
+    onAnyInputChanged();
+  }
+  if (hraMetroBtn) { hraMetroBtn.addEventListener('click', function() { setHraMetro(true); }); }
+  if (hraNonMetroBtn) { hraNonMetroBtn.addEventListener('click', function() { setHraMetro(false); }); }
+  window.hraIsMetro = null;
+
+  var hra80ggConfirmYesBtn = document.getElementById('hra_80gg_confirm_yes_btn');
+  var hra80ggConfirmNoBtn = document.getElementById('hra_80gg_confirm_no_btn');
+  var hra80ggConfirmHint = document.getElementById('hra_80gg_confirm_hint');
+  function set80ggConfirm(confirmed) {
+    window.hra80ggConfirmed = confirmed;
+    if (hra80ggConfirmHint) { hra80ggConfirmHint.style.display = 'none'; }
+    if (confirmed) {
+      if (hra80ggConfirmYesBtn) { hra80ggConfirmYesBtn.classList.add('active-new'); }
+      if (hra80ggConfirmNoBtn) { hra80ggConfirmNoBtn.classList.remove('active-new'); }
+    } else {
+      if (hra80ggConfirmNoBtn) { hra80ggConfirmNoBtn.classList.add('active-new'); }
+      if (hra80ggConfirmYesBtn) { hra80ggConfirmYesBtn.classList.remove('active-new'); }
+    }
+    onAnyInputChanged();
+  }
+  if (hra80ggConfirmYesBtn) { hra80ggConfirmYesBtn.addEventListener('click', function() { set80ggConfirm(true); }); }
+  if (hra80ggConfirmNoBtn) { hra80ggConfirmNoBtn.addEventListener('click', function() { set80ggConfirm(false); }); }
+  window.hra80ggConfirmed = null;
+
+  /* Property section entry point: None / One / Two-or-more */
+  var propNoneBtn = document.getElementById('prop_count_none_btn');
+  var propOneBtn = document.getElementById('prop_count_one_btn');
+  var propMultiBtn = document.getElementById('prop_count_multi_btn');
+  var propSingleBlock = document.getElementById('prop_single_block');
+  var propMultiBlock = document.getElementById('prop_multi_block');
+
+  function setPropMode(mode) {
+    window.propertyMode = mode;
+    [propNoneBtn, propOneBtn, propMultiBtn].forEach(function(b) { if (b) { b.classList.remove('active-new'); } });
+    if (mode === 'none' && propNoneBtn) { propNoneBtn.classList.add('active-new'); }
+    if (mode === 'one' && propOneBtn) { propOneBtn.classList.add('active-new'); }
+    if (mode === 'multi' && propMultiBtn) { propMultiBtn.classList.add('active-new'); }
+    if (propSingleBlock) { propSingleBlock.style.display = mode === 'one' ? 'block' : 'none'; }
+    if (propMultiBlock) { propMultiBlock.style.display = mode === 'multi' ? 'block' : 'none'; }
+    if (mode === 'multi' && propertyCount === 0) { addPropertyRow(); }
+    onAnyInputChanged();
+  }
+  if (propNoneBtn) { propNoneBtn.addEventListener('click', function() { setPropMode('none'); }); }
+  if (propOneBtn) { propOneBtn.addEventListener('click', function() { setPropMode('one'); }); }
+  if (propMultiBtn) { propMultiBtn.addEventListener('click', function() { setPropMode('multi'); }); }
+  window.propertyMode = 'none';
+
+  /* Single-property mode: self-occupied vs let-out toggle */
+  var singleOccBtn = document.getElementById('prop_single_occ_btn');
+  var singleLetBtn = document.getElementById('prop_single_let_btn');
+  var singleRentRow = document.getElementById('prop_single_rent_row');
+  var singleRentProjectorRow = document.getElementById('prop1_rent_projector_row');
+  var singleInterestSub = document.getElementById('prop1_interest_sub');
+  var singleOccHint = document.getElementById('prop_single_occ_hint');
+  function setSingleOccupancy(isOcc) {
+    window.propSingleIsOcc = isOcc;
+    if (singleOccHint) { singleOccHint.style.display = 'none'; }
+    if (isOcc) {
+      if (singleOccBtn) { singleOccBtn.classList.add('active-new'); }
+      if (singleLetBtn) { singleLetBtn.classList.remove('active-new'); }
+      if (singleRentRow) { singleRentRow.style.display = 'none'; }
+      if (singleRentProjectorRow) { singleRentProjectorRow.style.display = 'none'; }
+      if (singleInterestSub) { singleInterestSub.textContent = 'Max Rs.2,00,000 deductible \u2014 Old Regime only'; }
+    } else {
+      if (singleLetBtn) { singleLetBtn.classList.add('active-new'); }
+      if (singleOccBtn) { singleOccBtn.classList.remove('active-new'); }
+      if (singleRentRow) { singleRentRow.style.display = 'flex'; }
+      if (singleRentProjectorRow) { singleRentProjectorRow.style.display = 'flex'; }
+      if (singleInterestSub) { singleInterestSub.textContent = 'No cap \u2014 netted against your rental income'; }
+    }
+    onAnyInputChanged();
+  }
+  if (singleOccBtn) { singleOccBtn.addEventListener('click', function() { setSingleOccupancy(true); }); }
+  if (singleLetBtn) { singleLetBtn.addEventListener('click', function() { setSingleOccupancy(false); }); }
+  window.propSingleIsOcc = null; /* genuinely unanswered until user taps a choice */
+
+  /* Single-property mode: do you have an active loan? Genuinely unanswered until chosen. */
+  var singleLoanYesBtn = document.getElementById('prop1_has_loan_yes_btn');
+  var singleLoanNoBtn = document.getElementById('prop1_has_loan_no_btn');
+  var singleLoanFields = document.getElementById('prop1_loan_fields');
+  var singleLoanHint = document.getElementById('prop1_has_loan_hint');
+  function setSingleHasLoan(hasLoan) {
+    window.propSingleHasLoan = hasLoan;
+    if (singleLoanHint) { singleLoanHint.style.display = 'none'; }
+    if (hasLoan) {
+      if (singleLoanYesBtn) { singleLoanYesBtn.classList.add('active-new'); }
+      if (singleLoanNoBtn) { singleLoanNoBtn.classList.remove('active-new'); }
+      if (singleLoanFields) { singleLoanFields.style.display = 'block'; }
+    } else {
+      if (singleLoanNoBtn) { singleLoanNoBtn.classList.add('active-new'); }
+      if (singleLoanYesBtn) { singleLoanYesBtn.classList.remove('active-new'); }
+      if (singleLoanFields) { singleLoanFields.style.display = 'none'; }
+      var interestFieldEl = document.getElementById('prop1_interest');
+      if (interestFieldEl) { interestFieldEl.value = '0'; }
+    }
+    onAnyInputChanged();
+  }
+  if (singleLoanYesBtn) { singleLoanYesBtn.addEventListener('click', function() { setSingleHasLoan(true); }); }
+  if (singleLoanNoBtn) { singleLoanNoBtn.addEventListener('click', function() { setSingleHasLoan(false); }); }
+  window.propSingleHasLoan = null; /* genuinely unanswered until user taps a choice */
+
+  /* Single-property pre-construction interest toggle */
+  var preconBtn = document.getElementById('prop1_precon_toggle_btn');
+  var preconFields = document.getElementById('prop1_precon_fields');
+  var preconYearRow = document.getElementById('prop1_precon_year_row');
+  if (preconBtn) {
+    preconBtn.addEventListener('click', function() {
+      var isOpen = preconFields && preconFields.style.display === 'flex';
+      if (preconFields) { preconFields.style.display = isOpen ? 'none' : 'flex'; }
+      if (preconYearRow) { preconYearRow.style.display = isOpen ? 'none' : 'flex'; }
+      preconBtn.textContent = isOpen ? '+ Add pre-construction interest' : '\u2212 Remove pre-construction interest';
+      onAnyInputChanged();
+    });
+  }
+
+  /* Multi-property "add another" button */
+  var addPropBtn = document.getElementById('add_property_btn');
+  if (addPropBtn) {
+    addPropBtn.addEventListener('click', function() {
+      addPropertyRow();
+      onAnyInputChanged();
+    });
+  }
+
+  var btn = document.getElementById('calcbtn');
+  if (btn) {
+    btn.addEventListener('click', doCalc);
+    btn.addEventListener('touchend', function(e) {
+      e.preventDefault();
+      doCalc();
+    });
+  }
+
+  var propDateEl = document.getElementById('prop_purchase_date');
+  if (propDateEl) {
+    propDateEl.addEventListener('change', doCalc);
+    propDateEl.addEventListener('input', onAnyInputChanged);
+  }
+  var propYearEl = document.getElementById('prop_purchase_year');
+  if (propYearEl) {
+    propYearEl.addEventListener('blur', doCalc);
+    propYearEl.addEventListener('input', onAnyInputChanged);
+  }
+
+  var lateDateEl = document.getElementById('paid_after_fy_date');
+  if (lateDateEl) {
+    lateDateEl.addEventListener('blur', doCalc);
+    lateDateEl.addEventListener('input', onAnyInputChanged);
+  }
+
+  /* Part-year income projector: "Fill" button computes monthly-rate x months
+     and writes the result into the main annual field, then recalculates. */
+  function wireProjector(rateId, monthsId, targetId, btnId) {
+    var btnEl = document.getElementById(btnId);
+    if (!btnEl) { return; }
+    btnEl.addEventListener('click', function() {
+      var rate = parseINR(document.getElementById(rateId).value);
+      var monthsRaw = document.getElementById(monthsId).value;
+      var months = parseInt(monthsRaw, 10);
+      if (!months || months < 1) { months = 12; }
+      if (months > 12) { months = 12; }
+      var projected = rate * months;
+      document.getElementById(targetId).value = String(projected);
+      fmtInput(targetId);
+      /* Mark dirty and prompt the user to tap Compute themselves, rather than
+         silently auto-computing - a filled-in projector value is exactly as
+         much a "changed input" as typing directly into the field. */
+      onAnyInputChanged();
+    });
+  }
+  wireProjector('salary_monthly_rate', 'salary_months', 'salary', 'salary_project_btn');
+  wireProjector('consultancy_monthly_rate', 'consultancy_months', 'consultancy', 'consultancy_project_btn');
+  wireProjector('prop1_rent_monthly_rate', 'prop1_rent_months', 'prop1_rent', 'prop1_rent_project_btn');
+  window.wireProjectorFn = wireProjector; /* expose for dynamically-added property rows */
+
+  /* Collapsible section toggle (used for the optional Advance Tax Paid tracker) */
+  var c2Toggle = document.getElementById('c2_toggle');
+  var c2Body = document.getElementById('c2_body');
+  if (c2Toggle && c2Body) {
+    c2Toggle.addEventListener('click', function() {
+      var isOpen = c2Body.classList.contains('open');
+      if (isOpen) {
+        c2Body.classList.remove('open');
+        c2Toggle.classList.remove('open');
+      } else {
+        c2Body.classList.add('open');
+        c2Toggle.classList.add('open');
+      }
+    });
+  }
+
+  var addSalBtn = document.getElementById('add_salary_source_btn');
+  if (addSalBtn) {
+    addSalBtn.addEventListener('click', function() {
+      addSalarySource();
+      onAnyInputChanged();
+    });
+  }
+  var addConsultBtn = document.getElementById('add_consultancy_source_btn');
+  if (addConsultBtn) {
+    addConsultBtn.addEventListener('click', function() {
+      addConsultSource();
+      onAnyInputChanged();
+    });
+  }
+
+  /* Tax Position regime toggle - re-renders the section's display values
+     from the already-computed taxPositionNew/taxPositionOld without a full recalc.
+     Two button pairs exist (3.3 Due Dates, 3.4 Tax Position) and stay in sync. */
+  var tpNewBtn = document.getElementById('tp_regime_new_btn');
+  var tpOldBtn = document.getElementById('tp_regime_old_btn');
+  var ddNewBtn = document.getElementById('dd_regime_new_btn');
+  var ddOldBtn = document.getElementById('dd_regime_old_btn');
+  function renderTaxPosition(regime) {
+    window.taxPositionSelectedRegime = regime;
+    var tp = (regime === 'old') ? window.taxPositionOld : window.taxPositionNew;
+    if (!tp) { return; }
+    setEl('int_assessed_tax', fmtINR(tp.assessed_tax));
+    setEl('int_tds_credit', fmtINR(tp.tds_credit));
+    setEl('int_total_credit', fmtINR(tp.total_credit_31mar));
+    setEl('int_pct_covered', tp.pct_covered.toFixed(1) + '%');
+    setEl('int_234b_amt', tp.b_interest > 0 ? fmtINR(tp.b_interest) + tp.b_end_date_note : 'Nil');
+    setEl('int_234c_amt', tp.c_interest > 0 ? fmtINR(tp.c_interest) : 'Nil');
+    setEl('int_total', tp.total_interest > 0 ? fmtINR(tp.total_interest) : 'Nil \u2014 no interest exposure');
+    setEl('tp_regime_label_1', 'Total tax liability \u2014 ' + (regime === 'old' ? 'Old Regime' : 'New Regime'));
+
+    var balancePayable = tp.assessed_tax - tp.total_credit_31mar;
+    if (balancePayable < 0) { balancePayable = 0; }
+    setEl('dd_balance_payable_disp', balancePayable > 0 ? fmtINR(balancePayable) : 'Nil \u2014 fully covered');
+    setEl('dd_balance_payable_sub', 'Against ' + (regime === 'old' ? 'Old' : 'New') + ' Regime total tax, after TDS + payments above');
+
+    [[tpNewBtn, tpOldBtn], [ddNewBtn, ddOldBtn]].forEach(function(pair) {
+      var newBtn = pair[0], oldBtn = pair[1];
+      if (!newBtn || !oldBtn) { return; }
+      if (regime === 'old') {
+        newBtn.classList.remove('active-new');
+        oldBtn.classList.add('active-old');
+      } else {
+        oldBtn.classList.remove('active-old');
+        newBtn.classList.add('active-new');
+      }
+    });
+  }
+  if (tpNewBtn) { tpNewBtn.addEventListener('click', function() { renderTaxPosition('new'); }); }
+  if (tpOldBtn) { tpOldBtn.addEventListener('click', function() { renderTaxPosition('old'); }); }
+  if (ddNewBtn) { ddNewBtn.addEventListener('click', function() { renderTaxPosition('new'); }); }
+  if (ddOldBtn) { ddOldBtn.addEventListener('click', function() { renderTaxPosition('old'); }); }
+}
+
+/* Run on load */
+function init() {
+  wireInputs();
+  /* Seed one source row of each type so the section isn't empty when it first appears */
+  addSalarySource();
+  addConsultSource();
+  doCalc();
+  /* doCalc() sets hasComputedOnce=true and shows "Computed" - but on initial page
+     load with no real user input yet, we want genuine State 1, not State 3. */
+  window.hasComputedOnce = false;
+  setButtonState('initial');
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+</script>
+</body>
+</html>
